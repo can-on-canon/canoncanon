@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <style>
 /* ------------------------------------------------------- */
 /*  Fonts                                                   */
@@ -143,11 +142,14 @@ fetch("photos/photos.json")
 
     list.forEach(file => {
       const img = document.createElement("img");
-      img.src = "photos/" + file;
+
+      // load small thumbnail in gallery
+      img.src = "photos/thumbs/" + file;
       img.loading = "lazy";
 
+      // on click, show full-size image
       img.onclick = () => {
-        document.getElementById("lightboxImg").src = img.src;
+        document.getElementById("lightboxImg").src = "photos/full/" + file;
         document.getElementById("lightbox").style.display = "flex";
       };
 
