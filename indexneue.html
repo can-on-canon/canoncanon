@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>canoncanon.cc — gallery</title>
-<meta name="description" content="An awesome retro gallery.">
+<title>canoncanon.cc — gallery (Win98 explorer style)</title>
+<meta name="description" content="Retro Win98-styled gallery — thumbnails and dialog viewer.">
 
-<!-- Fonts (absolute paths so they work in /license etc.) -->
+<!-- Fonts: MSSans (absolute paths) -->
 <style>
 @font-face {
   font-family: 'MSSans';
@@ -24,372 +24,443 @@
 }
 
 /* -------------------------
-   Base / theme switching
+   Color tokens (light/dark)
    ------------------------- */
 :root {
-  --bg-light: #ffffff;
-  --text-light: #d941a4;
-  --bg-dark: #0e0e11;
-  --text-dark: #f78c20;
-  --nav-bg: #cfcfcf;
-  --nav-border: #000;
+  --win-bg: #c0c0c0;    /* classic desktop gray */
+  --content-bg: #ffffff;
+  --text: #000000;
+  --accent: #000000;
+  --overlay: rgba(0,0,0,0.55);
 }
 
-body {
+/* Respect prefers-color-scheme: we keep Win98 look but allow text color shift */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --win-bg: #bdbdbd;
+    --content-bg: #e9e9e9;
+    --text: #f5b06c; /* keep your accent idea */
+  }
+}
+
+/* -------------------------
+   Page / Window layout
+   ------------------------- */
+html,body {
+  height: 100%;
   margin: 0;
-  padding: 0;
+  background: #808080; /* page behind window */
   font-family: 'MSSans', sans-serif;
-  background: var(--bg-light);
-  color: var(--text-light);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* system preference */
-@media (prefers-color-scheme: dark) {
-  body {
-    background: var(--bg-dark);
-    color: var(--text-dark);
-  }
-}
-
-/* centered column layout */
-.container {
-  max-width: 980px;
-  margin: 18px auto;
-  padding: 12px;
-}
-
-/* -------------------------
-   Win98 style top toolbar
-   ------------------------- */
-.toolbar {
+/* The "application window" that fills viewport (like Explorer) */
+.app-window {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 8px; /* a small margin like a real desktop */
+  background: var(--win-bg);
   display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 8px;
-  background: linear-gradient(#dcdcdc, #bfbfbf);
+  flex-direction: column;
   border-left: 2px solid #fff;
   border-top: 2px solid #fff;
   border-right: 2px solid #000;
   border-bottom: 2px solid #000;
-  margin-bottom: 14px;
-  user-select: none;
-}
-
-/* single button style — monochrome 3D bevel */
-.win-btn {
-  display: inline-block;
-  font-family: 'MSSans', sans-serif;
-  font-size: 14px;
-  padding: 6px 12px;
-  color: #000;
-  background: linear-gradient(#efefef, #d6d6d6);
-  border: 2px solid #000;
-  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8f8f8f;
-  cursor: pointer;
-  transition: transform 60ms ease, box-shadow 60ms ease;
-}
-
-/* pressed/active look via class or :active */
-.win-btn:active,
-.win-btn.pressed {
-  transform: translateY(1px);
-  box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #8f8f8f;
-}
-
-/* focus outline for keyboard-friendly navigation */
-.win-btn:focus {
-  outline: 2px dashed rgba(0,0,0,0.4);
-  outline-offset: 3px;
-}
-
-/* simple label/title to right of toolbar optionally */
-.site-title {
-  margin-left: 12px;
-  font-weight: 700;
-  color: inherit;
-  font-size: 14px;
-}
-
-/* -------------------------
-   Header / gallery layout
-   ------------------------- */
-.header {
-  text-align: center;
-  margin: 12px 0 18px 0;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
-  padding: 6px;
-}
-
-/* thumbnail card */
-.gallery img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border: 2px solid #000; /* Win98 border */
-  background: #ccc;
-  cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-  display: block;
-}
-.gallery img:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
-}
-
-/* -------------------------
-   Lightbox (retro + frame)
-   ------------------------- */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(4px) contrast(1.05);
-  -webkit-backdrop-filter: blur(4px) contrast(1.05);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
   overflow: hidden;
 }
 
-/* CRT noise overlay */
-.lightbox::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-repeat: repeat;
-  opacity: 0.08;
-  z-index: 1;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4////fwAJ/gP+Zsa1fQAAAABJRU5ErkJggg==");
-}
-
-/* Win98 mono frame container */
-.lightbox-frame {
-  background: #e3e3e3;
+/* Inside content area (below toolbar) */
+.app-client {
+  background: var(--content-bg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 8px;
-  border: 2px solid #000;
-  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
-  z-index: 2;
-  display: inline-block;
-}
-
-/* the image itself */
-.lightbox-frame img {
-  display: block;
-  max-width: calc(92vw - 18px);
-  max-height: calc(92vh - 18px);
-  border: 1px solid #000;
-}
-
-/* arrows */
-.nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: 'MSSans', sans-serif;
-  font-size: 48px;
-  padding: 8px 14px;
-  cursor: pointer;
-  user-select: none;
-  opacity: 0.9;
-  color: inherit;
-  z-index: 3;
-}
-.nav-btn:hover { opacity: 1; }
-#prevBtn { left: 16px; }
-#nextBtn { right: 16px; }
-
-/* close hint small */
-.lightbox-close-hint {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  font-size: 12px;
-  opacity: 0.75;
+  box-sizing: border-box;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  overflow: auto;
 }
 
 /* -------------------------
-   Footer
+   Toolbar (text-only) — Win98 style
    ------------------------- */
-footer {
-  margin-top: 18px;
-  padding: 10px 4px;
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.9;
-  color: inherit;
+.toolbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+  background: linear-gradient(#dcdcdc,#dcdcdc); /* flat */
+  border-bottom: 2px solid #000;
+  padding-left: 8px;
 }
 
-/* small responsive tweak */
-@media (max-width: 480px) {
-  .gallery img { height: 120px; }
-  .nav-btn { font-size: 36px; }
-  .win-btn { padding: 6px 8px; font-size: 13px; }
+/* Bevelled button */
+.win-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1;
+  background: #cfcfcf;
+  color: #000;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: none;
+}
+
+/* pressed state: invert the bevel */
+.win-btn.pressed,
+.win-btn:active {
+  transform: translateY(1px);
+  border-left: 2px solid #000;
+  border-top: 2px solid #000;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
+
+/* toolbar label */
+.toolbar-title {
+  margin-left: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* -------------------------
+   Header / title inside client
+   ------------------------- */
+.app-header {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+/* -------------------------
+   Gallery grid
+   ------------------------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+/* thumbnail card: Win98 border (2px black border and 1px white inner) */
+.thumb {
+  background: #e8e8e8;
+  padding: 6px;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  display: block;
+}
+.thumb img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #000;
+}
+
+/* thumbnail hover (slightly pressed visual) */
+.thumb:active, .thumb:focus {
+  transform: translateY(1px);
+}
+
+/* -------------------------
+   Win98 dialog viewer (centered)
+   ------------------------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: none;         /* toggled by JS */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px) contrast(1.02);
+  -webkit-backdrop-filter: blur(3px) contrast(1.02);
+}
+
+/* dialog window */
+.dialog {
+  background: var(--content-bg);
+  min-width: 420px;
+  max-width: calc(96vw);
+  box-sizing: border-box;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: rgba(0,0,0,0.35) 4px 4px 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* titlebar (Win98) */
+.dialog-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: #000080; /* classic navy title */
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 2px solid #000;
+}
+
+/* title text area */
+.dialog-title {
+  flex: 1;
+}
+
+/* titlebar buttons area */
+.title-controls {
+  display: flex;
+  gap: 6px;
+}
+
+/* small square close button — monochrome style */
+.title-btn {
+  width: 18px;
+  height: 16px;
+  display: inline-block;
+  text-align: center;
+  line-height: 14px;
+  font-weight: 700;
+  background: #cfcfcf;
+  color: #000;
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* dialog content area (image) */
+.dialog-body {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* image fits inside with border */
+.dialog-body img {
+  max-width: calc(100vw - 120px);
+  max-height: calc(100vh - 160px);
+  border: 1px solid #000;
+  display: block;
+}
+
+/* dialog footer area for filename */
+.dialog-footer {
+  padding: 6px 8px;
+  font-size: 12px;
+  border-top: 2px solid #000;
+  background: #e6e6e6;
+}
+
+/* arrows outside dialog */
+.dialog-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: var(--text);
+  user-select: none;
+  cursor: pointer;
+  z-index: 10000;
+  padding: 6px;
+}
+.dialog-nav.left { left: 20px; }
+.dialog-nav.right { right: 20px; }
+
+/* small helper: hidden when no prev/next */
+.hidden { display: none !important; }
+
+/* -------------------------
+   Footer and responsive tweaks
+   ------------------------- */
+.app-footer {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #111;
+  opacity: 0.9;
+}
+
+/* ensure full-app behavior on small screens */
+@media (max-width: 640px) {
+  .thumb img { height: 110px; }
+  .dialog-body img { max-width: calc(100vw - 60px); max-height: calc(100vh - 120px); }
+  .dialog { min-width: 300px; }
+  .dialog-nav { font-size: 30px; padding: 4px; }
 }
 </style>
-
-<!-- tiny click sound (short, non-intrusive) -->
-<audio id="clickSound" preload="auto">
-  <source src="data:audio/mpeg;base64,//uQZAAAAAAAAAAAAAAAAAAAAAA..." type="audio/mpeg">
-  <!-- If you'd rather not have sound, remove this audio tag and the play call in JS -->
-</audio>
-
-<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
 </head>
 <body>
 
-<!-- TOP TOOLBAR -->
-<div class="toolbar container" role="navigation" aria-label="site navigation">
-  <button class="win-btn" id="btnHome" data-target="/">Home</button>
-  <button class="win-btn" id="btnAbout" data-target="/about">About</button>
-  <button class="win-btn" id="btnLicense" data-target="/license">License</button>
-  <div class="site-title">canoncanon.cc</div>
-</div>
-
-<div class="container">
-  <div class="header">canoncanon.cc — Test Gallery</div>
-
-  <div class="gallery" id="gallery" aria-live="polite"></div>
-
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="lightbox-frame" id="lightboxFrame">
-      <img id="lightboxImg" alt="Expanded photo">
-    </div>
-
-    <div id="prevBtn" class="nav-btn" role="button" aria-label="Previous">‹</div>
-    <div id="nextBtn" class="nav-btn" role="button" aria-label="Next">›</div>
-
-    <div class="lightbox-close-hint">Click outside the frame or press Esc to close</div>
+<div class="app-window" role="application" aria-label="CanonCanon gallery app">
+  <!-- TOOLBAR -->
+  <div class="toolbar" role="toolbar" aria-label="Application toolbar">
+    <button class="win-btn" id="btnHome" data-target="/">Home</button>
+    <button class="win-btn" id="btnAbout" data-target="/about">About</button>
+    <button class="win-btn" id="btnLicense" data-target="/license">License</button>
+    <div style="flex:1"></div>
+    <div style="padding-right:10px; font-weight:700; font-size:13px;">canoncanon.cc</div>
   </div>
 
-  <footer>
-    <div>website under construction</div>
-    <div>© 2025 — Photos licensed under CC BY-NC-SA 4.0 <a href="/license">[*]</a></div>
-  </footer>
+  <!-- CLIENT AREA -->
+  <div class="app-client" id="client">
+    <div class="app-header">Photos</div>
+
+    <div id="gallery" class="gallery" aria-live="polite"></div>
+
+    <div class="app-footer app-footer" role="contentinfo">
+      © 2025 — Photos licensed under CC BY-NC-SA 4.0 — <a href="/license">License</a>
+    </div>
+  </div>
+</div>
+
+<!-- DIALOG / OVERLAY -->
+<div class="overlay" id="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="dialog" role="document" id="dialogWindow" aria-labelledby="dialogTitle">
+    <div class="dialog-titlebar">
+      <div class="dialog-title" id="dialogTitle">Preview</div>
+      <div class="title-controls">
+        <div class="title-btn" id="btnClose" title="Close">X</div>
+      </div>
+    </div>
+
+    <div class="dialog-body">
+      <img id="dialogImg" alt="Full photo">
+    </div>
+
+    <div class="dialog-footer" id="dialogFooter">filename.jpg</div>
+  </div>
+
+  <div class="dialog-nav left" id="navLeft" aria-hidden="true" title="Previous">‹</div>
+  <div class="dialog-nav right" id="navRight" aria-hidden="true" title="Next">›</div>
 </div>
 
 <script>
 /* -------------------------
-   Basic gallery + lightbox
+   Gallery + Dialog logic
    ------------------------- */
 let photoList = [];
-let currentIndex = 0;
-const galleryEl = document.getElementById('gallery');
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightboxImg');
-const clickSound = document.getElementById('clickSound');
+let currentIndex = -1;
 
-// small helper to play click if present
-function playClick() {
-  try { if (clickSound && clickSound.play) { clickSound.currentTime = 0; clickSound.play().catch(()=>{}); } } catch(e){}
-}
+const gallery = document.getElementById('gallery');
+const overlay = document.getElementById('overlay');
+const dialogImg = document.getElementById('dialogImg');
+const dialogFooter = document.getElementById('dialogFooter');
+const dialogTitle = document.getElementById('dialogTitle');
+const navLeft = document.getElementById('navLeft');
+const navRight = document.getElementById('navRight');
+const btnClose = document.getElementById('btnClose');
 
-// fetch photos.json and render thumbs
-fetch("photos/photos.json")
+// load photos.json
+fetch('photos/photos.json')
   .then(r => r.json())
   .then(list => {
     photoList = list;
     list.forEach((file, idx) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'thumb';
+      wrapper.setAttribute('tabindex', '0');
       const img = document.createElement('img');
-      img.src = "photos/thumbs/" + file;
-      img.loading = "lazy";
+      img.src = 'photos/thumbs/' + file;
       img.alt = file;
-      img.setAttribute('data-index', idx);
-      img.onclick = () => openLightbox(idx);
-      galleryEl.appendChild(img);
+      wrapper.appendChild(img);
+      wrapper.addEventListener('click', () => openDialog(idx));
+      wrapper.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openDialog(idx); });
+      gallery.appendChild(wrapper);
     });
   })
   .catch(err => {
-    console.error('Failed to load photos.json', err);
-    galleryEl.textContent = "No photos available.";
+    gallery.textContent = 'No photos found.';
+    console.error(err);
   });
 
-// open lightbox by index
-function openLightbox(index) {
+function openDialog(index) {
+  if (!photoList || index < 0 || index >= photoList.length) return;
   currentIndex = index;
-  lightboxImg.src = "photos/full/" + photoList[index];
-  lightbox.style.display = 'flex';
-  lightbox.setAttribute('aria-hidden', 'false');
-  playClick();
+  const filename = photoList[index];
+  dialogImg.src = 'photos/full/' + filename;
+  dialogFooter.textContent = filename;
+  dialogTitle.textContent = 'Preview — ' + filename;
+  overlay.style.display = 'flex';
+  overlay.setAttribute('aria-hidden','false');
+
+  // update nav visibility
+  navLeft.classList.toggle('hidden', index === 0);
+  navRight.classList.toggle('hidden', index === photoList.length - 1);
 }
 
-// close
-function closeLightbox() {
-  lightbox.style.display = 'none';
-  lightbox.setAttribute('aria-hidden', 'true');
+function closeDialog() {
+  overlay.style.display = 'none';
+  overlay.setAttribute('aria-hidden','true');
+  dialogImg.src = '';
+  currentIndex = -1;
 }
 
-// lightbox click: close when clicking overlay but not inside the frame
-lightbox.addEventListener('click', (e) => {
-  // if clicking exactly the overlay area
-  if (e.target === lightbox) closeLightbox();
-});
-
-// prev/next buttons
-document.getElementById('nextBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (currentIndex < photoList.length - 1) openLightbox(currentIndex + 1);
-  playClick();
-});
-document.getElementById('prevBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (currentIndex > 0) openLightbox(currentIndex - 1);
-  playClick();
-});
-
-// keyboard navigation
-document.addEventListener('keydown', (ev) => {
-  if (lightbox.style.display !== 'flex') return;
-  if (ev.key === 'Escape') { closeLightbox(); }
-  if (ev.key === 'ArrowRight' && currentIndex < photoList.length - 1) { openLightbox(currentIndex + 1); }
-  if (ev.key === 'ArrowLeft' && currentIndex > 0) { openLightbox(currentIndex - 1); }
-});
-
-/* -------------------------
-   Top toolbar navigation with click animation
-   ------------------------- */
-function navClickHandler(e) {
-  const btn = e.currentTarget;
-  const target = btn.getAttribute('data-target');
-  // click animation: add pressed class briefly
-  btn.classList.add('pressed');
-  playClick();
-  setTimeout(() => btn.classList.remove('pressed'), 120);
-
-  // navigate
-  // If target is same-origin path, do location assign
-  if (target && (target.startsWith('/') || target.startsWith('./') || target.startsWith('http'))) {
-    window.location.href = target;
-  }
+// navigation functions
+function goNext() {
+  if (currentIndex < photoList.length - 1) openDialog(currentIndex + 1);
+}
+function goPrev() {
+  if (currentIndex > 0) openDialog(currentIndex - 1);
 }
 
-document.getElementById('btnHome').addEventListener('click', navClickHandler);
-document.getElementById('btnAbout').addEventListener('click', navClickHandler);
-document.getElementById('btnLicense').addEventListener('click', navClickHandler);
+// close when clicking outside the dialog
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) closeDialog();
+});
 
-/* -------------------------
-   Accessibility tweaks: allow Enter/Space to trigger toolbar
-   ------------------------- */
+// nav clicks
+navLeft.addEventListener('click', (e) => { e.stopPropagation(); goPrev(); });
+navRight.addEventListener('click', (e) => { e.stopPropagation(); goNext(); });
+btnClose.addEventListener('click', closeDialog);
+
+// keyboard
+document.addEventListener('keydown', (e) => {
+  if (overlay.style.display !== 'flex') return;
+  if (e.key === 'Escape') closeDialog();
+  if (e.key === 'ArrowRight') goNext();
+  if (e.key === 'ArrowLeft') goPrev();
+});
+
+// toolbar navigation (text-only)
+function navHandler(e) {
+  const target = e.currentTarget.getAttribute('data-target');
+  // pressed animation
+  e.currentTarget.classList.add('pressed');
+  setTimeout(()=> e.currentTarget.classList.remove('pressed'), 110);
+
+  if (!target) return;
+  // navigate to path
+  window.location.href = target;
+}
+document.getElementById('btnHome').addEventListener('click', navHandler);
+document.getElementById('btnAbout').addEventListener('click', navHandler);
+document.getElementById('btnLicense').addEventListener('click', navHandler);
+
+// keyboard access for toolbar
 ['btnHome','btnAbout','btnLicense'].forEach(id => {
   const el = document.getElementById(id);
-  el.setAttribute('tabindex', '0');
-  el.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
-  });
+  el.setAttribute('tabindex','0');
+  el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }});
 });
 </script>
-
 </body>
 </html>
