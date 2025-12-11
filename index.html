@@ -143,11 +143,11 @@ fetch("photos/photos.json")
     list.forEach(file => {
       const img = document.createElement("img");
 
-      // load small thumbnail in gallery
+      // Load the thumbnail (root/photos/thumbs)
       img.src = "photos/thumbs/" + file;
       img.loading = "lazy";
 
-      // on click, show full-size image
+      // When clicked, load the full-size version
       img.onclick = () => {
         document.getElementById("lightboxImg").src = "photos/full/" + file;
         document.getElementById("lightbox").style.display = "flex";
