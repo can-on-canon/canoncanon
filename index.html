@@ -2,16 +2,27 @@
 <html lang="en">
 <head>
 
-  <!-- Load custom font -->
-  <style>
-  @font-face {
-      font-family: 'WinReg';
-      src: url('./fonts/winreg.woff2') format('woff2'),
-           url('./fonts/winreg.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-  }
-  </style>
+<style>
+@font-face {
+    font-family: 'MSSans';
+    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2'),
+         url('/fonts/converted/ms_sans_serif.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MSSans';
+    src: url('/fonts/converted/ms_sans_serif_bold.woff2') format('woff2'),
+         url('/fonts/converted/ms_sans_serif_bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    font-family: 'MSSans', sans-serif;
+}
+</style>
 
   <!-- Metadata + Icons -->
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
@@ -22,15 +33,7 @@
   <title>canon²</title>
   <meta name="description" content="an awesome gallery of awesome stuff">
 
-  <!-- Main Styles -->
   <style>
-    body {
-      margin: 0;
-      font-family: 'WinReg', system-ui, sans-serif;
-      background: #0e0e11;
-      color: white;
-    }
-
     header {
       padding: 24px;
       text-align: center;
