@@ -1,85 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>CanonCanon – Windows 98 Style Gallery</title>
+<meta charset="UTF-8">
+<title>canon²</title>
+<meta name="description" content="an awesome gallery of awesome stuff">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="shortcut icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" sizes="64x64" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 1️⃣ Font ------------------------------------------------------------ -->
+<!-- ------------------------------------------------------- -->
+<!--  Global Styles & Windows‑98 toolbar                    -->
+<!-- ------------------------------------------------------- -->
 <style>
-@font-face{font-family:"MS Sans Serif";src:local("MS Sans Serif"),url(https://fonts.gstatic.com/s/ms-sans-serif/v1/XXXXX.woff2) format("woff2");}
-body{font-family:"MS Sans Serif",Tahoma,Arial,sans-serif;background:#008080;color:#000;font-size:12px;margin:0;padding-top:30px;}
-a{color:#00f;text-decoration:none;cursor:pointer;}
-</style>
+/* ==================  BASIC RESET  ===================== */
+*, *::before, *::after { box-sizing: border-box; }
+body{ margin:0; font-family:'MSSans',sans-serif; color:#000;background:#c0c0c0;font-size:13px; }
 
-<!-- 2️⃣ Toolbar ---------------------------------------------------------- -->
-<style>
-#toolbar{
-    position:fixed;top:0;left:0;width:100%;height:30px;
-    background:#000080;color:white;display:flex;align-items:center;
-    box-shadow:0 1px 2px rgba(0,0,0,.3);z-index:100;
+/* ==================  TOOLBAR  ========================= */
+.toolbar{
+    display:flex;
+    background:#000080; /* classic Windows‑98 blue */
+    color:white;
+    padding:2px 4px;
+    font-weight:bold;
 }
-#toolbar .btn{
-    display:flex;align-items:center;justify-content:center;
-    width:70px;height:26px;margin-left:2px;background:#C0C0C0;
-    border:1px solid #FFF;border-bottom:1px solid #000;border-right:1px solid #000;
-    cursor:pointer;font-size:12px;color:#000;user-select:none;
+.toolbar button{
+    background:#c0c0c0;
+    border:1px solid #000080;
+    padding:2px 8px;
+    margin-right:2px;
+    font-family:'MSSans',sans-serif;
+    cursor:pointer;
 }
-#toolbar .btn:hover{background:#FFF;}
-#toolbar .btn-start{
-    width:34px;height:26px;margin-left:0;background:#C0C0C0;
-    border:1px solid #FFF;border-bottom:1px solid #000;border-right:1px solid #000;
+.toolbar button:hover{ background:#e0e0e0; }
+.toolbar a{
+    color:white;
+    text-decoration:none;
 }
-#toolbar .btn-start img{width:16px;height:16px;margin:auto;}
-</style>
+.toolbar .spacer{ flex:1; }
 
-<!-- 3️⃣ Gallery container ------------------------------------------------ -->
-<style>
-#gallery{
-    display:grid;gap:10px;padding:20px;
-    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+/* ==================  HEADER & FOOTER  ================= */
+header{ padding:24px;text-align:center;font-size:28px;font-weight:600;letter-spacing:.5px;background:#e0e0e0;}
+footer{ text-align:center;padding:20px;font-size:13px;opacity:.7;background:#e0e0e0; }
+
+/* ==================  GALLERY  ========================= */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:12px;
+    padding:12px;
 }
-#gallery img{width:100%;cursor:pointer;border:2px solid #C0C0C0;}
+.gallery img{
+    width:100%;height:auto;object-fit:cover;border-radius:10px;
+    cursor:pointer;transition:transform .15s ease;
+}
+.gallery img:hover{ transform:scale(1.04); }
+
+/* ==================  LIGHTBOX  ======================== */
+.lightbox{
+    position:fixed; inset:0;background:rgba(0,0,0,.92);
+    display:none;align-items:center;justify-content:center;
+    z-index:999;
+}
+.lightbox img{ max-width:92vw;max-height:92vh;border-radius:14px; }
+.nav-btn{
+    position:absolute;top:50%;transform:translateY(-50%);
+    font-family:'MSSans',sans-serif;font-size:48px;padding:10px 18px;
+    cursor:pointer;user-select:none;opacity:.8;color:white;
+}
+.nav-btn:hover{ opacity:1; }
+#prevBtn{ left:20px; } #nextBtn{ right:20px; }
+
+/* ==================  DARK MODE (optional)  ============ */
+@media (prefers-color-scheme:dark){
+    body{ background:#2e2e2e;color:#f0b6e7; }
+    .toolbar{ background:#0033cc; border-color:#0066ff;color:white; }
+    .toolbar button{ background:#c0c0c0;border-color:#0066ff; }
+    .toolbar button:hover{ background:#e0e0e0; }
+}
 </style>
 </head>
 
 <body>
 
-<!-- 4️⃣ Toolbar -->
-<div id="toolbar">
-    <div class="btn btn-start" onclick="location.href='index.html'">
-        <!-- 16x16 Windows icon (you can replace with any PNG) -->
-        <img src="icons/windows.png" alt="Start">
-    </div>
-    <div class="btn" onclick="location.href='index.html'">Home</div>
-    <div class="btn" onclick="location.href='about.html'">About</div>
-    <div class="btn" onclick="location.href='license.html'">License</div>
-    <div class="btn" onclick="location.href='instagram.html'">Instagram</div>
+<!-- ==================  TOOLBAR  ========================= -->
+<div class="toolbar">
+    <a href="index.html"><button>Home</button></a>
+    <a href="about/index.html"><button>About</button></a>
+    <a href="license/LICENSE.txt"><button>Licensing</button></a>
+    <a href="https://instagram.com/yourhandle"><button>Instagram</button></a>
+    <div class="spacer"></div>
 </div>
 
-<!-- 5️⃣ Gallery -->
-<div id="gallery">
-    <!-- thumbnails pulled from photos/thumb/ -->
-    <img src="photos/thumb/IMG_0268.jpg" alt="">
-    <img src="photos/thumb/IMG_0270.jpg" alt="">
+<header>canoncanon.cc – test page</header>
+
+<div class="gallery" id="gallery"></div>
+
+<div class="lightbox" id="lightbox">
+    <img id="lightboxImg">
+    <div id="prevBtn" class="nav-btn">‹</div>
+    <div id="nextBtn" class="nav-btn">›</div>
 </div>
 
-<!-- 6️⃣ Lightbox (the one you already have) ----------------------------- -->
+<footer>
+    website under construction<br>
+    © 2025 — Photos licensed under CC BY‑NC‑SA 4.0
+</footer>
+
 <script>
-/* Example lightbox – replace with your own if needed */
-document.querySelectorAll('#gallery img').forEach(img=>{
-    img.addEventListener('click',()=>{
-        const full = 'photos/full/' + img.src.split('/thumb/')[1];
-        const lb=document.createElement('div');
-        lb.style.position='fixed';lb.style.top=0;lb.style.left=0;
-        lb.style.width='100%';lb.style.height='100%';
-        lb.style.background='rgba(0,0,0,.8)';lb.style.display='flex';
-        lb.style.alignItems='center';lb.style.justifyContent='center';
-        const fg=document.createElement('img');
-        fg.src=full;fg.style.maxWidth='90%';fg.style.maxHeight='90%';
-        lb.appendChild(fg);
-        document.body.appendChild(lb);
-        lb.addEventListener('click',()=>lb.remove());
+let photoList = [], currentIndex = 0;
+
+// Load photos.json
+fetch("photos/photos.json")
+.then(r => r.json())
+.then(list => {
+    photoList = list;
+    const gallery = document.getElementById("gallery");
+    list.forEach((file, idx) => {
+        const img = document.createElement("img");
+        img.src = "photos/thumbs/" + file;
+        img.loading = "lazy";
+        img.onclick = () => openLightbox(idx);
+        gallery.appendChild(img);
     });
+});
+
+function openLightbox(index) {
+    currentIndex = index;
+    document.getElementById("lightboxImg").src = "photos/full/" + photoList[index];
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+// Close when clicking background or arrow buttons
+document.getElementById("lightbox").onclick = (e) => {
+    if (e.target.id === "lightbox" || e.target.classList.contains("nav-btn")) {
+        document.getElementById("lightbox").style.display = "none";
+    }
+};
+
+// Next / Prev buttons
+document.getElementById("nextBtn").onclick = (e) => {
+    e.stopPropagation();
+    if (currentIndex < photoList.length - 1) openLightbox(currentIndex + 1);
+};
+document.getElementById("prevBtn").onclick = (e) => {
+    e.stopPropagation();
+    if (currentIndex > 0) openLightbox(currentIndex - 1);
+};
+
+// Arrow keys
+document.addEventListener("keydown", (event) => {
+    const lightbox = document.getElementById("lightbox");
+    if (lightbox.style.display !== "flex") return;
+    if (event.key === "ArrowRight" && currentIndex < photoList.length - 1)
+        openLightbox(currentIndex + 1);
+    if (event.key === "ArrowLeft" && currentIndex > 0)
+        openLightbox(currentIndex - 1);
+    if (event.key === "Escape")
+        lightbox.style.display = "none";
 });
 </script>
 
