@@ -86,13 +86,19 @@ header {
 .lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55); /* semi-transparent black overlay */
-    backdrop-filter: blur(6px);   /* light blur */
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.55); /* more transparent for glow */
+    backdrop-filter: blur(4px) contrast(1.05);
+    -webkit-backdrop-filter: blur(4px) contrast(1.05);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 999;
+}
+
+.lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    border-radius: 14px;
 }
 
 /* Navigation arrows */
