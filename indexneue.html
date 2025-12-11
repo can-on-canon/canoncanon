@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>canoncanon.cc — gallery</title>
+<meta name="description" content="An awesome retro gallery.">
+
+<!-- Fonts (absolute paths so they work in /license etc.) -->
+<style>
+@font-face {
+  font-family: 'MSSans';
+  src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2'),
+       url('/fonts/converted/ms_sans_serif.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MSSans';
+  src: url('/fonts/converted/ms_sans_serif_bold.woff2') format('woff2'),
+       url('/fonts/converted/ms_sans_serif_bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* -------------------------
+   Base / theme switching
+   ------------------------- */
+:root {
+  --bg-light: #ffffff;
+  --text-light: #d941a4;
+  --bg-dark: #0e0e11;
+  --text-dark: #f78c20;
+  --nav-bg: #cfcfcf;
+  --nav-border: #000;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'MSSans', sans-serif;
+  background: var(--bg-light);
+  color: var(--text-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* system preference */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+  }
+}
+
+/* centered column layout */
+.container {
+  max-width: 980px;
+  margin: 18px auto;
+  padding: 12px;
+}
+
+/* -------------------------
+   Win98 style top toolbar
+   ------------------------- */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: linear-gradient(#dcdcdc, #bfbfbf);
+  border-left: 2px solid #fff;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin-bottom: 14px;
+  user-select: none;
+}
+
+/* single button style — monochrome 3D bevel */
+.win-btn {
+  display: inline-block;
+  font-family: 'MSSans', sans-serif;
+  font-size: 14px;
+  padding: 6px 12px;
+  color: #000;
+  background: linear-gradient(#efefef, #d6d6d6);
+  border: 2px solid #000;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8f8f8f;
+  cursor: pointer;
+  transition: transform 60ms ease, box-shadow 60ms ease;
+}
+
+/* pressed/active look via class or :active */
+.win-btn:active,
+.win-btn.pressed {
+  transform: translateY(1px);
+  box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #8f8f8f;
+}
+
+/* focus outline for keyboard-friendly navigation */
+.win-btn:focus {
+  outline: 2px dashed rgba(0,0,0,0.4);
+  outline-offset: 3px;
+}
+
+/* simple label/title to right of toolbar optionally */
+.site-title {
+  margin-left: 12px;
+  font-weight: 700;
+  color: inherit;
+  font-size: 14px;
+}
+
+/* -------------------------
+   Header / gallery layout
+   ------------------------- */
+.header {
+  text-align: center;
+  margin: 12px 0 18px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 6px;
+}
+
+/* thumbnail card */
+.gallery img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border: 2px solid #000; /* Win98 border */
+  background: #ccc;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  display: block;
+}
+.gallery img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.06);
+}
+
+/* -------------------------
+   Lightbox (retro + frame)
+   ------------------------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px) contrast(1.05);
+  -webkit-backdrop-filter: blur(4px) contrast(1.05);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  overflow: hidden;
+}
+
+/* CRT noise overlay */
+.lightbox::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  opacity: 0.08;
+  z-index: 1;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4////fwAJ/gP+Zsa1fQAAAABJRU5ErkJggg==");
+}
+
+/* Win98 mono frame container */
+.lightbox-frame {
+  background: #e3e3e3;
+  padding: 8px;
+  border: 2px solid #000;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #000;
+  z-index: 2;
+  display: inline-block;
+}
+
+/* the image itself */
+.lightbox-frame img {
+  display: block;
+  max-width: calc(92vw - 18px);
+  max-height: calc(92vh - 18px);
+  border: 1px solid #000;
+}
+
+/* arrows */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'MSSans', sans-serif;
+  font-size: 48px;
+  padding: 8px 14px;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.9;
+  color: inherit;
+  z-index: 3;
+}
+.nav-btn:hover { opacity: 1; }
+#prevBtn { left: 16px; }
+#nextBtn { right: 16px; }
+
+/* close hint small */
+.lightbox-close-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+/* -------------------------
+   Footer
+   ------------------------- */
+footer {
+  margin-top: 18px;
+  padding: 10px 4px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.9;
+  color: inherit;
+}
+
+/* small responsive tweak */
+@media (max-width: 480px) {
+  .gallery img { height: 120px; }
+  .nav-btn { font-size: 36px; }
+  .win-btn { padding: 6px 8px; font-size: 13px; }
+}
+</style>
+
+<!-- tiny click sound (short, non-intrusive) -->
+<audio id="clickSound" preload="auto">
+  <source src="data:audio/mpeg;base64,//uQZAAAAAAAAAAAAAAAAAAAAAA..." type="audio/mpeg">
+  <!-- If you'd rather not have sound, remove this audio tag and the play call in JS -->
+</audio>
+
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+</head>
+<body>
+
+<!-- TOP TOOLBAR -->
+<div class="toolbar container" role="navigation" aria-label="site navigation">
+  <button class="win-btn" id="btnHome" data-target="/">Home</button>
+  <button class="win-btn" id="btnAbout" data-target="/about">About</button>
+  <button class="win-btn" id="btnLicense" data-target="/license">License</button>
+  <div class="site-title">canoncanon.cc</div>
+</div>
+
+<div class="container">
+  <div class="header">canoncanon.cc — Test Gallery</div>
+
+  <div class="gallery" id="gallery" aria-live="polite"></div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-frame" id="lightboxFrame">
+      <img id="lightboxImg" alt="Expanded photo">
+    </div>
+
+    <div id="prevBtn" class="nav-btn" role="button" aria-label="Previous">‹</div>
+    <div id="nextBtn" class="nav-btn" role="button" aria-label="Next">›</div>
+
+    <div class="lightbox-close-hint">Click outside the frame or press Esc to close</div>
+  </div>
+
+  <footer>
+    <div>website under construction</div>
+    <div>© 2025 — Photos licensed under CC BY-NC-SA 4.0 <a href="/license">[*]</a></div>
+  </footer>
+</div>
+
+<script>
+/* -------------------------
+   Basic gallery + lightbox
+   ------------------------- */
+let photoList = [];
+let currentIndex = 0;
+const galleryEl = document.getElementById('gallery');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const clickSound = document.getElementById('clickSound');
+
+// small helper to play click if present
+function playClick() {
+  try { if (clickSound && clickSound.play) { clickSound.currentTime = 0; clickSound.play().catch(()=>{}); } } catch(e){}
+}
+
+// fetch photos.json and render thumbs
+fetch("photos/photos.json")
+  .then(r => r.json())
+  .then(list => {
+    photoList = list;
+    list.forEach((file, idx) => {
+      const img = document.createElement('img');
+      img.src = "photos/thumbs/" + file;
+      img.loading = "lazy";
+      img.alt = file;
+      img.setAttribute('data-index', idx);
+      img.onclick = () => openLightbox(idx);
+      galleryEl.appendChild(img);
+    });
+  })
+  .catch(err => {
+    console.error('Failed to load photos.json', err);
+    galleryEl.textContent = "No photos available.";
+  });
+
+// open lightbox by index
+function openLightbox(index) {
+  currentIndex = index;
+  lightboxImg.src = "photos/full/" + photoList[index];
+  lightbox.style.display = 'flex';
+  lightbox.setAttribute('aria-hidden', 'false');
+  playClick();
+}
+
+// close
+function closeLightbox() {
+  lightbox.style.display = 'none';
+  lightbox.setAttribute('aria-hidden', 'true');
+}
+
+// lightbox click: close when clicking overlay but not inside the frame
+lightbox.addEventListener('click', (e) => {
+  // if clicking exactly the overlay area
+  if (e.target === lightbox) closeLightbox();
+});
+
+// prev/next buttons
+document.getElementById('nextBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentIndex < photoList.length - 1) openLightbox(currentIndex + 1);
+  playClick();
+});
+document.getElementById('prevBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentIndex > 0) openLightbox(currentIndex - 1);
+  playClick();
+});
+
+// keyboard navigation
+document.addEventListener('keydown', (ev) => {
+  if (lightbox.style.display !== 'flex') return;
+  if (ev.key === 'Escape') { closeLightbox(); }
+  if (ev.key === 'ArrowRight' && currentIndex < photoList.length - 1) { openLightbox(currentIndex + 1); }
+  if (ev.key === 'ArrowLeft' && currentIndex > 0) { openLightbox(currentIndex - 1); }
+});
+
+/* -------------------------
+   Top toolbar navigation with click animation
+   ------------------------- */
+function navClickHandler(e) {
+  const btn = e.currentTarget;
+  const target = btn.getAttribute('data-target');
+  // click animation: add pressed class briefly
+  btn.classList.add('pressed');
+  playClick();
+  setTimeout(() => btn.classList.remove('pressed'), 120);
+
+  // navigate
+  // If target is same-origin path, do location assign
+  if (target && (target.startsWith('/') || target.startsWith('./') || target.startsWith('http'))) {
+    window.location.href = target;
+  }
+}
+
+document.getElementById('btnHome').addEventListener('click', navClickHandler);
+document.getElementById('btnAbout').addEventListener('click', navClickHandler);
+document.getElementById('btnLicense').addEventListener('click', navClickHandler);
+
+/* -------------------------
+   Accessibility tweaks: allow Enter/Space to trigger toolbar
+   ------------------------- */
+['btnHome','btnAbout','btnLicense'].forEach(id => {
+  const el = document.getElementById(id);
+  el.setAttribute('tabindex', '0');
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+  });
+});
+</script>
+
+</body>
+</html>
