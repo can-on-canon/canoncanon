@@ -1,169 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Canon</title>
 
-<style>
-/* ------------------------------------------------------- */
-/*  Fonts                                                  */
-/* ------------------------------------------------------- */
-@font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif_bold.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif_bold.woff') format('woff');
-    font-weight: 700;
-    font-style: normal;
-}
+    <!-- Navigation Toolbar -->
+    <style>
+        /* ------------------------------------------------------- */
+        /*  Toolbar                                                */
+        /* ------------------------------------------------------- */
+        .toolbar {
+            background-color: #87ceeb; /* Light blue color like Windows 98 buttons */
+            text-align: center;
+            padding: 10px 0;
+        }
 
-/* ------------------------------------------------------- */
-/*  Base Layout — light by default                         */
-/* ------------------------------------------------------- */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'MSSans', sans-serif;
-    background: #ffffff;
-    color: #202122;
-}
+        .toolbar a {
+            display: inline-block;
+            margin: 0 15px; /* Spacing between buttons */
+            padding: 5px 10px;
+            background-color: #6a5acd; /* Dark blue color like Windows 98 button faces */
+            text-decoration: none;
+            color: white;
+            font-family: 'MSSans', sans-serif;
+            border-radius: 2px;
+        }
 
-/* Light mode */
-@media (prefers-color-scheme: light) {
-    body {
-        background: #ffffff;
-        color: #f78c20;
-    }
-}
-
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-    body {
-        background: #2e2e2e;
-        color: #f0b6e7;
-    }
-}
-
-/* ------------------------------------------------------- */
-/*  Header                                                 */
-/* ------------------------------------------------------- */
-header {
-    padding: 24px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-/* ------------------------------------------------------- */
-/*  Toolbar                                                */
-/* ------------------------------------------------------- */
-.toolbar {
-    display: flex;
-    justify-content: space-around;
-    background-color: #0c83d7;
-    color: white;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.toolbar a {
-    text-decoration: none;
-    color: white;
-    font-family: 'MSSans', sans-serif;
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.toolbar a:hover {
-    background-color: #0972bd;
-}
-
-/* ------------------------------------------------------- */
-/*  Gallery                                                */
-/* ------------------------------------------------------- */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    padding: 12px;
-}
-.gallery img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.15s ease;
-}
-.gallery img:hover {
-    transform: scale(1.04);
-}
-
-/* ------------------------------------------------------- */
-/*  Lightbox                                               */
-/* ------------------------------------------------------- */
-.lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-.lightbox img {
-    max-width: 92vw;
-    max-height: 92vh;
-    border-radius: 14px;
-}
-
-/* Navigation arrows */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'MSSans', sans-serif;
-    font-size: 48px;
-    padding: 10px 18px;
-    cursor: pointer;
-    user-select: none;
-    opacity: 0.8;
-    color: inherit; /* matches text color in dark/light */
-}
-.nav-btn:hover {
-    opacity: 1;
-}
-#prevBtn { left: 20px; }
-#nextBtn { right: 20px; }
-
-/* ------------------------------------------------------- */
-/*  Footer                                                 */
-/* ------------------------------------------------------- */
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 13px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-}
-</style>
+        .toolbar a:hover {
+            background-color: #7b68ee; /* Slightly darker shade on hover */
+        }
+    </style>
+</head>
+<body>
 
 <!-- Navigation Toolbar -->
 <div class="toolbar">
     <a href="index.html">Home</a>
     <a href="about/index.html">About</a>
-    <a href="license/index.html">Licensing</a>
+    <a href="license/index.html">License</a>
     <a href="https://www.instagram.com/canoncanon.cc" target="_blank">Instagram</a>
 </div>
 
 <header>
-    <h1>canoncanon.cc – test page</h1>
+    <h1>Canon Canon</h1>
 </header>
-</head>
-<body>
+
+<!-- Gallery -->
+<div class="gallery">
+    <!-- Example photo 1 -->
+    <img src="./photos/thumb/IMG_0268.jpg" alt="Photo 1" onclick="openLightbox('IMG_0268')">
+
+    <!-- Example photo 2 -->
+    <img src="./photos/thumb/IMG_0270.jpg" alt="Photo 2" onclick="openLightbox('IMG_0270')">
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <span class="close-button" onclick="closeLightbox()">&times;</span>
+    <img class="lightbox-image" id="lightboxImage">
+</div>
+
+<!-- JavaScript for Lightbox -->
+<script>
+    function openLightbox(photoId) {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImage');
+
+        // Fetch the photo filename
+        lightboxImg.src = `./photos/full/${photoId}`;
+
+        lightbox.style.display = 'block';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+</script>
+</body>
+</html>
