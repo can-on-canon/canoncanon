@@ -1,0 +1,51 @@
+All photos on github.com/can-on-canon/canoncanon & canoncanon.cc are © @can.on.canon, 2025.
+
+Default License:
+Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International
+(CC BY-NC-SA 4.0)
+
+Human-readable deed:
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Legal code:
+https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+Permissions under CC BY-NC-SA 4.0:
+- You may share, redistribute, and adapt the photos for noncommercial use.
+- You must provide attribution.
+- You must indicate if changes were made.
+- You must license derivative works under the same CC BY-NC-SA terms.
+- No additional restrictions may be applied to limit others from using the work under these terms.
+
+Noncommercial restriction:
+Any commercial use (advertising, merchandise, paid media, corporate use, etc.)
+requires a separate written license from @can.on.canon.
+
+Additional Prohibition — No AI Training:
+The following uses are NOT permitted under any circumstance without explicit,
+written permission:
+
+- use of these images in machine-learning, neural networks, or generative AI model training;
+- inclusion in any dataset intended for computational analysis, automated scraping,
+data extraction, or ingestion by automated systems;
+- use of these images in pipelines, crawlers, or tools for dataset creation or expansion;
+- contribution of these images to public or private AI training corpora.
+
+The "No AI Training" clause applies in addition to the CC BY-NC-SA 4.0 license.
+
+Attribution:
+When reasonably possible, please credit the photographer as:
+
+Photo: @can.on.canon / canoncanon.cc — CC BY-NC-SA 4.0
+
+Commercial Licensing:
+For commercial use, exclusivity requests, or special permissions,
+contact: can@canoncanon.cc
+Include the image filename(s), intended usage, duration, territory,
+and whether exclusivity is requested.
+
+Jurisdiction:
+Creative Commons licenses are designed for international use.
+These rights are enforceable under Turkish copyright law and international law.
+
+Last updated: 11 December 2025
