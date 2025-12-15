@@ -6,20 +6,25 @@
   <title>canon²</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Favicon -->
+
+  <link rel="icon" type="image/png" href="/favicon.png">
+
   <style>
   /* ------------------------------------------------------- */
-  /*  Fonts — Myriad Pro canonical weights                   */
+  /*  Fonts — Myriad Pro (ONLY files that actually exist)    */
   /* ------------------------------------------------------- */
-  /* Adobe Myriad Pro standard weights:
-     Light = 300
-     Regular = 400
-     Semibold = 600
+  /*
+     Your repository contains:
+     - MyriadPro-Light (300)
+     - MyriadPro-Regular (400)
+     There is NO Semibold file, so we must not declare it.
   */
 
   @font-face {
       font-family: 'MyriadPro';
-      src: url('./fonts/converted/MyriadPro-Light.woff2') format('woff2'),
-           url('./fonts/converted/MyriadPro-Light.woff') format('woff');
+      src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+           url('/fonts/converted/MyriadPro-Light.woff') format('woff');
       font-weight: 300;
       font-style: normal;
       font-display: swap;
@@ -27,18 +32,9 @@
 
   @font-face {
       font-family: 'MyriadPro';
-      src: url('./fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
-           url('./fonts/converted/MyriadPro-Regular.woff') format('woff');
+      src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+           url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
       font-weight: 400;
-      font-style: normal;
-      font-display: swap;
-  }
-
-  @font-face {
-      font-family: 'MyriadPro';
-      src: url('./fonts/converted/MyriadPro-Semibold.woff2') format('woff2'),
-           url('./fonts/converted/MyriadPro-Semibold.woff') format('woff');
-      font-weight: 600;
       font-style: normal;
       font-display: swap;
   }
@@ -49,10 +45,15 @@
   body {
       margin: 0;
       padding: 0;
-      font-family: 'MyriadPro', sans-serif;
+      font-family: 'MyriadPro'; /* NO fallback while debugging */
       font-weight: 400;
       background: #ffffff;
       color: #202122;
+      line-height: 1.5;
+
+      /* Apple-like smoothing */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
   }
 
   /* Light mode */
@@ -72,7 +73,7 @@
   }
 
   /* ------------------------------------------------------- */
-  /*  Header — left aligned                                  */
+  /*  Header                                                 */
   /* ------------------------------------------------------- */
   header {
       padding: 24px;
@@ -81,8 +82,8 @@
   header h1 {
       margin: 0;
       font-size: 28px;
-      font-weight: 600; /* Semibold */
-      letter-spacing: 0.5px;
+      font-weight: 400; /* Regular — DO NOT use 600 */
+      letter-spacing: -0.015em; /* Apple-era tracking */
   }
 
   /* ------------------------------------------------------- */
@@ -90,22 +91,18 @@
   /* ------------------------------------------------------- */
   main {
       padding: 24px;
-      font-weight: 300; /* Light */
+      font-weight: 300;
   }
 
   main p {
       margin-top: 0;
   }
 
-  /* ------------------------------------------------------- */
-  /*  Footer                                                 */
-  /* ------------------------------------------------------- */
-  footer {
-      padding: 20px 24px;
-      font-size: 13px;
-      font-weight: 300;
-      opacity: 0.7;
+  a {
+      text-decoration: none;
+      font-weight: 400;
   }
+
   </style>
 
 </head>
@@ -116,7 +113,10 @@
   </header>
 
   <main>
-    <p>come back later</br>ABCDEFGHIJKLMONPQRSTUVWXYZr</p>
+    <p>
+      come back later<br>
+      ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    </p>
     <a href="/">take me back!!!</a>
   </main>
 
