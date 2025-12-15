@@ -1,6 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+
+<style>
+/* ------------------------------------------------------- */
+/*  Fonts                                                  */
+/* ------------------------------------------------------- */
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* ------------------------------------------------------- */
+/*  Base Layout — light by default                         */
+/* ------------------------------------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'MSSans', sans-serif;
+    background: #ffffff;
+    color: #202122;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    body {
+        background: #ffffff;
+        color: #f78c20;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #2e2e2e;
+        color: #f0b6e7;
+    }
+}
+
+/* ------------------------------------------------------- */
+/*  Header                                                 */
+/* ------------------------------------------------------- */
+header {
+    padding: 24px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+/* ------------------------------------------------------- */
+/*  Footer                                                 */
+/* ------------------------------------------------------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+    opacity: 0.7;
+}
+</style>
   <meta charset="UTF-8">
   <title>About – can on canon</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
