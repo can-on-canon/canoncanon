@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,8 +8,14 @@
 
   <style>
   /* ------------------------------------------------------- */
-  /*  Fonts                                                  */
+  /*  Fonts — Myriad Pro canonical weights                   */
   /* ------------------------------------------------------- */
+  /* Adobe Myriad Pro standard weights:
+     Light = 300
+     Regular = 400
+     Semibold = 600
+  */
+
   @font-face {
       font-family: 'MyriadPro';
       src: url('./fonts/converted/MyriadPro-Light.woff2') format('woff2'),
@@ -22,19 +29,28 @@
       font-family: 'MyriadPro';
       src: url('./fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
            url('./fonts/converted/MyriadPro-Regular.woff') format('woff');
-      font-weight: 500;
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: 'MyriadPro';
+      src: url('./fonts/converted/MyriadPro-Semibold.woff2') format('woff2'),
+           url('./fonts/converted/MyriadPro-Semibold.woff') format('woff');
+      font-weight: 600;
       font-style: normal;
       font-display: swap;
   }
 
   /* ------------------------------------------------------- */
-  /*  Base Layout                                           */
+  /*  Base Layout — LEFT aligned                             */
   /* ------------------------------------------------------- */
   body {
       margin: 0;
       padding: 0;
       font-family: 'MyriadPro', sans-serif;
-      font-weight: 500;
+      font-weight: 400;
       background: #ffffff;
       color: #202122;
   }
@@ -56,35 +72,36 @@
   }
 
   /* ------------------------------------------------------- */
-  /*  Header                                                */
+  /*  Header — left aligned                                  */
   /* ------------------------------------------------------- */
   header {
       padding: 24px;
-      text-align: center;
   }
 
   header h1 {
       margin: 0;
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 600; /* Semibold */
       letter-spacing: 0.5px;
   }
 
   /* ------------------------------------------------------- */
-  /*  Content                                               */
+  /*  Content                                                */
   /* ------------------------------------------------------- */
   main {
-      text-align: center;
       padding: 24px;
-      font-weight: 300;
+      font-weight: 300; /* Light */
+  }
+
+  main p {
+      margin-top: 0;
   }
 
   /* ------------------------------------------------------- */
-  /*  Footer                                                */
+  /*  Footer                                                 */
   /* ------------------------------------------------------- */
   footer {
-      text-align: center;
-      padding: 20px;
+      padding: 20px 24px;
       font-size: 13px;
       font-weight: 300;
       opacity: 0.7;
@@ -99,7 +116,7 @@
   </header>
 
   <main>
-    <p>come back later</p>
+    <p>come back later</br>ABCDEFGHIJKLMONPQRSTUVWXYZr</p>
     <a href="/">take me back!!!</a>
   </main>
 
