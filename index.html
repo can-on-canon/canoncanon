@@ -166,10 +166,17 @@ fetch("photos/photos.json")
       photoList = list;
       const gallery = document.getElementById("gallery");
 
-      list.forEach((file, idx) => {
+      list.forEach((name, idx) => {
           const img = document.createElement("img");
-          img.src = "photos/thumbs/" + file;
+
+          // WebP thumbnail
+          img.src = "photos/thumbs/" + name + ".webp";
           img.loading = "lazy";
+
+          // Fallback to JPG if WebP fails
+          img.onerror = () => {
+              img.src = "photos/thumbs/" + name + ".jpg";
+          };
 
           img.onclick = () => openLightbox(idx);
           gallery.appendChild(img);
@@ -178,13 +185,14 @@ fetch("photos/photos.json")
 
 function openLightbox(index) {
     currentIndex = index;
-    document.getElementById("lightboxImg").src = "photos/full/" + photoList[index];
+    document.getElementById("lightboxImg").src =
+        "photos/full/" + photoList[index] + ".jpg";
     document.getElementById("lightbox").style.display = "flex";
 }
 
-// Close when clicking background or arrow buttons
+// Close when clicking background
 document.getElementById("lightbox").onclick = (e) => {
-    if (e.target.id === "lightbox" || e.target.classList.contains("nav-btn")) {
+    if (e.target.id === "lightbox") {
         document.getElementById("lightbox").style.display = "none";
     }
 };
@@ -192,28 +200,35 @@ document.getElementById("lightbox").onclick = (e) => {
 // Next / Prev buttons
 document.getElementById("nextBtn").onclick = (e) => {
     e.stopPropagation();
-    if (currentIndex < photoList.length - 1) openLightbox(currentIndex + 1);
-};
-document.getElementById("prevBtn").onclick = (e) => {
-    e.stopPropagation();
-    if (currentIndex > 0) openLightbox(currentIndex - 1);
+    if (currentIndex < photoList.length - 1) {
+        openLightbox(currentIndex + 1);
+    }
 };
 
-// Arrow keys
+document.getElementById("prevBtn").onclick = (e) => {
+    e.stopPropagation();
+    if (currentIndex > 0) {
+        openLightbox(currentIndex - 1);
+    }
+};
+
+// Keyboard navigation
 document.addEventListener("keydown", (event) => {
     const lightbox = document.getElementById("lightbox");
     if (lightbox.style.display !== "flex") return;
 
-    if (event.key === "ArrowRight" && currentIndex < photoList.length - 1)
+    if (event.key === "ArrowRight" && currentIndex < photoList.length - 1) {
         openLightbox(currentIndex + 1);
+    }
 
-    if (event.key === "ArrowLeft" && currentIndex > 0)
+    if (event.key === "ArrowLeft" && currentIndex > 0) {
         openLightbox(currentIndex - 1);
+    }
 
-    if (event.key === "Escape")
+    if (event.key === "Escape") {
         lightbox.style.display = "none";
+    }
 });
 </script>
-
 </body>
 </html>
