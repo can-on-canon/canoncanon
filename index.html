@@ -1,88 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>canon²</title>
+
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
-/* ------------------------------------------------------- */
-/*  Fonts                                                  */
-/* ------------------------------------------------------- */
+/* Fonts */
 @font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif.woff') format('woff');
-    font-weight: 400;
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
+    font-weight: 300;
     font-style: normal;
-}
-@font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif_bold.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif_bold.woff') format('woff');
-    font-weight: 700;
-    font-style: normal;
+    font-display: swap;
 }
 
-/* ------------------------------------------------------- */
-/*  Base Layout                                            */
-/* ------------------------------------------------------- */
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+    
+/*Base layout*/
+    
 body {
     margin: 0;
     padding: 0;
-    font-family: 'MSSans', sans-serif;
-    background: #ffffff;
-    color: #202122;
+    font-family: 'MyriadPro';
+    font-weight: 400;
+    background: #2e2e2e;
+    color: #f0b6e7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: light) {
-    body {
-        background: #ffffff;
-        color: #f78c20;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background: #2e2e2e;
-        color: #f0b6e7;
-    }
-}
-
-/* ------------------------------------------------------- */
-/*  Header                                                 */
-/* ------------------------------------------------------- */
 header {
-    padding: 24px;
+    padding: 28px;
     text-align: center;
     font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
 }
 
-/* ------------------------------------------------------- */
-/*  Gallery                                                */
-/* ------------------------------------------------------- */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    padding: 12px;
+/*Masonry gallery*/
+
+.gallery-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 40px;
 }
+
+.gallery {
+    column-count: 4;
+    column-gap: 8px;
+}
+
+@media (max-width: 1200px) { .gallery { column-count: 3; } }
+@media (max-width: 800px)  { .gallery { column-count: 2; } }
+@media (max-width: 500px)  { .gallery { column-count: 1; } }
 
 .gallery img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+    margin-bottom: 8px;
     cursor: pointer;
-    transition: transform 0.15s ease;
 }
 
-.gallery img:hover {
-    transform: scale(1.04);
-}
-
-/* ------------------------------------------------------- */
-/*  Lightbox                                               */
-/* ------------------------------------------------------- */
+/*Lightbox*/
 .lightbox {
     position: fixed;
     inset: 0;
@@ -90,157 +79,191 @@ header {
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .lightbox img {
     max-width: 92vw;
     max-height: 92vh;
-    border-radius: 14px;
 }
 
-/* Navigation arrows */
-.nav-btn {
+/* Bottom UI */
+.counter {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'MSSans', sans-serif;
-    font-size: 48px;
-    padding: 10px 18px;
-    cursor: pointer;
-    user-select: none;
-    opacity: 0.8;
-    color: inherit;
+    bottom: 18px;
+    left: 18px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #ffffff;
+    opacity: 0.9;
 }
 
-.nav-btn:hover {
-    opacity: 1;
-}
-
-#prevBtn { left: 20px; }
-#nextBtn { right: 20px; }
-
-/* ------------------------------------------------------- */
-/*  Footer                                                 */
-/* ------------------------------------------------------- */
-footer {
-    text-align: center;
-    padding: 20px;
+.info-btn {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    background: rgba(0,0,0,0.75);
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
     font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+/* Metadata panel */
+.lightbox-meta {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(520px, calc(100vw - 40px));
+    background: rgba(0,0,0,0.78);
+    padding: 20px 22px;
+    display: none;
+
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #ffffff;
+}
+
+.meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    row-gap: 6px;
+}
+
+.meta-label {
+    opacity: 0.65;
+}
+
+.meta-value {
+    text-align: right;
+}
+
+.lightbox.show-meta .lightbox-meta {
+    display: block;
+}
+
+/* Footer */
+footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 300;
     opacity: 0.7;
 }
 </style>
-
-<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
-<link rel="shortcut icon" href="favicon.png" type="image/png">
-<link rel="apple-touch-icon" sizes="64x64" href="favicon.png">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>canon²</title>
-<meta name="description" content="an awesome gallery of awesome stuff">
-
 </head>
+
 <body>
 
-<header>canoncanon.cc – test page</header>
+<header>canoncanon.cc</header>
 
-<div class="gallery" id="gallery"></div>
+<div class="gallery-wrap">
+    <div class="gallery" id="gallery"></div>
+</div>
 
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" alt="">
-    <div id="prevBtn" class="nav-btn">⟸</div>
-    <div id="nextBtn" class="nav-btn">⟹</div>
+    <div class="counter" id="counter"></div>
+    <button class="info-btn" id="infoBtn">ⓘ INFO</button>
+    <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
 
 <footer>
-    website under construction<br>
-    © 2025 — Photos licensed under CC BY-NC-SA 4.0
+© 2025 — Photos licensed under CC BY-NC-SA 4.0
 </footer>
 
 <script>
-let photoList = [];
+let photos = [];
 let currentIndex = 0;
+let infoOpen = false;
 
-/* ------------------------------------------------------- */
-/*  Load photo list                                        */
-/* ------------------------------------------------------- */
 fetch("photos/photos.json")
-    .then(res => res.json())
-    .then(list => {
-        photoList = list;
+    .then(r => r.json())
+    .then(data => {
+        photos = data;
         const gallery = document.getElementById("gallery");
 
-        list.forEach((name, idx) => {
+        data.forEach((entry, idx) => {
             const img = document.createElement("img");
-
-            // IMG_0120.jpg → IMG_0120.webp
-            const webpName = name.replace(/\.jpg$/i, ".webp");
-
-            img.src = "photos/thumbs/" + webpName;
+            img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
             img.loading = "lazy";
 
-            // Fallback to JPG thumbnail
             img.onerror = () => {
-                img.onerror = null; // prevent infinite loop
-                img.src = "photos/thumbs/" + name;
+                img.onerror = null;
+                img.src = "photos/thumbs/" + entry.FileName;
             };
 
             img.onclick = () => openLightbox(idx);
             gallery.appendChild(img);
         });
-    })
-    .catch(err => {
-        console.error("Failed to load photos.json:", err);
     });
 
-/* ------------------------------------------------------- */
-/*  Lightbox                                               */
-/* ------------------------------------------------------- */
-function openLightbox(index) {
-    currentIndex = index;
-    document.getElementById("lightboxImg").src =
-        "photos/full/" + photoList[index];
-    document.getElementById("lightbox").style.display = "flex";
+function renderMeta(entry) {
+    document.getElementById("lightboxMeta").innerHTML = `
+        <div class="meta-grid">
+            <div class="meta-label">Camera</div><div class="meta-value">${entry.Model || ""}</div>
+            <div class="meta-label">Lens</div><div class="meta-value">${entry.LensModel || ""}</div>
+            <div class="meta-label">Focal</div><div class="meta-value">${entry.FocalLength || ""}</div>
+            <div class="meta-label">Aperture</div><div class="meta-value">${entry.Aperture ? "f/" + entry.Aperture : ""}</div>
+            <div class="meta-label">Shutter</div><div class="meta-value">${entry.ShutterSpeed || ""}</div>
+            <div class="meta-label">ISO</div><div class="meta-value">${entry.ISO ? "ISO " + entry.ISO : ""}</div>
+            <div class="meta-label">Date</div><div class="meta-value">${entry.DateTimeOriginal ? entry.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}</div>
+        </div>
+    `;
 }
 
-// Close when clicking backdrop
-document.getElementById("lightbox").onclick = (e) => {
+function openLightbox(index) {
+    currentIndex = index;
+    const entry = photos[index];
+
+    document.getElementById("lightboxImg").src =
+        "photos/full/" + entry.FileName;
+
+    document.getElementById("counter").textContent =
+        `(${index + 1}/${photos.length})`;
+
+    renderMeta(entry);
+
+    const lb = document.getElementById("lightbox");
+    lb.style.display = "flex";
+    lb.classList.toggle("show-meta", infoOpen);
+}
+
+/* Close */
+document.getElementById("lightbox").addEventListener("click", e => {
     if (e.target.id === "lightbox") {
-        document.getElementById("lightbox").style.display = "none";
+        e.currentTarget.style.display = "none";
+        infoOpen = false;
     }
+});
+
+/* INFO toggle */
+document.getElementById("infoBtn").onclick = e => {
+    e.stopPropagation();
+    infoOpen = !infoOpen;
+    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
-// Navigation buttons
-document.getElementById("nextBtn").onclick = (e) => {
-    e.stopPropagation();
-    if (currentIndex < photoList.length - 1) {
+/* Keyboard navigation */
+document.addEventListener("keydown", e => {
+    const lb = document.getElementById("lightbox");
+    if (lb.style.display !== "flex") return;
+
+    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) {
         openLightbox(currentIndex + 1);
     }
-};
-
-document.getElementById("prevBtn").onclick = (e) => {
-    e.stopPropagation();
-    if (currentIndex > 0) {
-        openLightbox(currentIndex - 1);
-    }
-};
-
-// Keyboard navigation
-document.addEventListener("keydown", (e) => {
-    const lightbox = document.getElementById("lightbox");
-    if (lightbox.style.display !== "flex") return;
-
-    if (e.key === "ArrowRight" && currentIndex < photoList.length - 1) {
-        openLightbox(currentIndex + 1);
-    }
-
     if (e.key === "ArrowLeft" && currentIndex > 0) {
         openLightbox(currentIndex - 1);
     }
-
     if (e.key === "Escape") {
-        lightbox.style.display = "none";
+        lb.style.display = "none";
+        infoOpen = false;
     }
 });
 </script>
