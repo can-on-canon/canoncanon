@@ -1,11 +1,99 @@
-[
-  "IMG_0120.jpg",
-  "IMG_0112.jpg",
-  "IMG_0268.jpg",
-  "IMG_0270.jpg",
-  "IMG_0344.jpg",
-  "IMG_0227.jpg",
-  "IMG_0322.jpg",
-  "IMG_2838.jpg",
-  "IMG_0213.jpg"
-]
+[{
+  "SourceFile": "./IMG_0112.jpg",
+  "FileName": "IMG_0112.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:08:27 12:26:45",
+  "FocalLength": "11.6 mm",
+  "Aperture": 4.0,
+  "ShutterSpeed": "1/1000",
+  "ISO": 80
+},
+{
+  "SourceFile": "./IMG_0120.jpg",
+  "FileName": "IMG_0120.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:08:28 08:45:31",
+  "FocalLength": "6.2 mm",
+  "Aperture": 8.0,
+  "ShutterSpeed": "1/800",
+  "ISO": 400
+},
+{
+  "SourceFile": "./IMG_0130.jpg",
+  "FileName": "IMG_0130.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:04 13:20:34",
+  "FocalLength": "14.3 mm",
+  "Aperture": 4.5,
+  "ShutterSpeed": "1/250",
+  "ISO": 400
+},
+{
+  "SourceFile": "./IMG_0213.jpg",
+  "FileName": "IMG_0213.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:04 17:46:16",
+  "FocalLength": "18.6 mm",
+  "Aperture": 14.0,
+  "ShutterSpeed": "1/400",
+  "ISO": 125
+},
+{
+  "SourceFile": "./IMG_0227.jpg",
+  "FileName": "IMG_0227.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:04 17:53:25",
+  "FocalLength": "6.2 mm",
+  "Aperture": 2.8,
+  "ShutterSpeed": "1/60",
+  "ISO": 160
+},
+{
+  "SourceFile": "./IMG_0268.jpg",
+  "FileName": "IMG_0268.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:04 18:01:59",
+  "FocalLength": "18.6 mm",
+  "Aperture": 4.9,
+  "ShutterSpeed": "1/50",
+  "ISO": 200
+},
+{
+  "SourceFile": "./IMG_0322.jpg",
+  "FileName": "IMG_0322.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:11 17:39:18",
+  "FocalLength": "6.2 mm",
+  "Aperture": 2.8,
+  "ShutterSpeed": "1/15",
+  "ISO": 200
+},
+{
+  "SourceFile": "./IMG_0344.jpg",
+  "FileName": "IMG_0344.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:11 17:49:10",
+  "FocalLength": "14.3 mm",
+  "Aperture": 4.5,
+  "ShutterSpeed": "1/60",
+  "ISO": 200
+},
+{
+  "SourceFile": "./IMG_2838.jpg",
+  "FileName": "IMG_2838.jpg",
+  "Model": "Canon DIGITAL IXUS 85 IS",
+  "LensModel": "6.2-18.6 mm",
+  "DateTimeOriginal": "2025:10:04 17:30:05",
+  "FocalLength": "18.6 mm",
+  "Aperture": 4.9,
+  "ShutterSpeed": "1/160",
+  "ISO": 80
+}]
