@@ -25,11 +25,11 @@ header {
     font-weight: 600;
 }
 
-/* ---------- Masonry Gallery ---------- */
+/* Masonry gallery */
 .gallery-wrap {
-    max-width: 1350px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 24px 40px;
+    padding: 0 32px 40px;
 }
 
 .gallery {
@@ -55,7 +55,7 @@ header {
     cursor: pointer;
 }
 
-/* ---------- Lightbox ---------- */
+/* Lightbox */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -71,7 +71,7 @@ header {
     max-height: 92vh;
 }
 
-/* Counter bottom-left */
+/* Bottom UI */
 .counter {
     position: absolute;
     bottom: 16px;
@@ -81,7 +81,6 @@ header {
     opacity: 0.85;
 }
 
-/* Info button bottom-right */
 .info-btn {
     position: absolute;
     bottom: 16px;
@@ -94,7 +93,6 @@ header {
     cursor: pointer;
 }
 
-/* Metadata panel */
 .lightbox-meta {
     position: absolute;
     bottom: 48px;
@@ -151,7 +149,7 @@ fetch("photos/photos.json")
         const gallery = document.getElementById("gallery");
 
         data.forEach((entry, idx) => {
-            const file = typeof entry === "string" ? entry : entry.file;
+            const file = entry.FileName;
 
             const img = document.createElement("img");
             img.src = "photos/thumbs/" + file.replace(/\.jpg$/i, ".webp");
@@ -163,7 +161,6 @@ fetch("photos/photos.json")
             };
 
             img.onclick = () => openLightbox(idx);
-
             gallery.appendChild(img);
         });
     });
@@ -171,7 +168,7 @@ fetch("photos/photos.json")
 function openLightbox(index) {
     currentIndex = index;
     const entry = photos[index];
-    const file = typeof entry === "string" ? entry : entry.file;
+    const file = entry.FileName;
 
     document.getElementById("lightboxImg").src =
         "photos/full/" + file;
@@ -179,26 +176,24 @@ function openLightbox(index) {
     document.getElementById("counter").textContent =
         `(${index + 1}/${photos.length})`;
 
-    const meta = document.getElementById("lightboxMeta");
-    if (typeof entry === "object") {
-        meta.innerHTML = `
-            ${entry.camera || ""}<br>
-            ${entry.lens || ""}<br>
-            ${[entry.focal, entry.aperture, entry.shutter, entry.iso && "ISO " + entry.iso]
-                .filter(Boolean)
-                .join(" · ")}
-            ${entry.date ? "<br>" + entry.date : ""}
-        `;
-    } else {
-        meta.innerHTML = "";
-    }
+    document.getElementById("lightboxMeta").innerHTML = `
+        ${entry.Model || ""}<br>
+        ${entry.LensModel || ""}<br>
+        ${[
+            entry.FocalLength,
+            entry.Aperture && "f/" + entry.Aperture,
+            entry.ShutterSpeed,
+            entry.ISO && "ISO " + entry.ISO
+        ].filter(Boolean).join(" · ")}
+        ${entry.DateTimeOriginal ? "<br>" + entry.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}
+    `;
 
     const lb = document.getElementById("lightbox");
     lb.classList.remove("show-meta");
     lb.style.display = "flex";
 }
 
-/* Close only on background click */
+/* Close on background click */
 document.getElementById("lightbox").addEventListener("click", e => {
     if (e.target.id === "lightbox") {
         e.currentTarget.style.display = "none";
