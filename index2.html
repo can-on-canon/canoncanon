@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>canoncanon.cc</title>
 
-<title>Gallery</title>
+<link rel="icon" href="/favicon.png">
 
 <style>
-/* =======================
-   FONTS
-======================= */
 @font-face {
     font-family: "MyriadPro";
-    src:
-        url("fonts/MyriadPro-Regular.woff2") format("woff2"),
-        url("fonts/MyriadPro-Regular.woff") format("woff");
-    font-weight: normal;
+    src: url("/fonts/converted/MyriadPro-Regular.woff2") format("woff2"),
+         url("/fonts/converted/MyriadPro-Regular.woff") format("woff");
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
-/* =======================
-   BASE
-======================= */
-html, body {
+body {
     margin: 0;
-    background: #2e2e2e;
-    color: #eee;
-    font-family: "MS Sans Serif", Arial, sans-serif;
+    font-family: inherit;
+    background: var(--bg);
+    color: var(--fg);
 }
 
-/* =======================
-   HEADER
-======================= */
 header {
+    padding: 28px;
     text-align: center;
-    padding: 20px 0;
-    font-size: 20px;
+    font-size: 28px;
+    letter-spacing: -0.02em;
 }
 
-/* =======================
-   GALLERY
-======================= */
-.gallery-wrapper {
-    max-width: 1200px;
+.gallery-wrap {
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 0 32px 40px;
 }
 
 .gallery {
     column-count: 4;
-    column-gap: 10px;
+    column-gap: 8px;
 }
 
 @media (max-width: 1200px) { .gallery { column-count: 3; } }
@@ -58,102 +48,87 @@ header {
 
 .gallery img {
     width: 100%;
-    display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     cursor: pointer;
-    background: #444;
+    display: block;
 }
 
-/* =======================
-   LIGHTBOX
-======================= */
 .lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.9);
+    background: color-mix(in srgb, var(--bg) 92%, black);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 1000;
 }
 
-.lightbox.active {
-    display: flex;
-}
-
 .lightbox img {
-    max-width: 90vw;
-    max-height: 90vh;
-}
-
-/* =======================
-   NAV ARROWS
-======================= */
-.nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 40px;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-    padding: 20px;
-}
-
-.nav.left { left: 0; }
-.nav.right { right: 0; }
-
-/* =======================
-   INFO PANEL
-======================= */
-.info-panel {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,0.75);
-    padding: 18px 24px;
-    display: none;
-    font-family: "MyriadPro", Arial, sans-serif;
-    font-size: 16px;
-}
-
-.info-panel.active {
-    display: block;
-}
-
-.info-grid {
-    max-width: 600px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    row-gap: 6px;
-    column-gap: 30px;
-}
-
-.info-label {
-    opacity: 0.7;
-}
-
-/* =======================
-   FOOTER CONTROLS
-======================= */
-.controls {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    font-size: 14px;
-}
-
-.info-toggle {
-    cursor: pointer;
+    max-width: 92vw;
+    max-height: 92vh;
 }
 
 .counter {
-    opacity: 0.8;
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--accent);
+}
+
+.info-btn {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    background: color-mix(in srgb, var(--bg) 80%, black);
+    color: var(--fg);
+    border: none;
+    padding: 8px 14px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+.lightbox-meta {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(560px, calc(100vw - 40px));
+    background: color-mix(in srgb, var(--bg) 78%, black);
+    padding: 22px 24px;
+    display: none;
+    font-family: "MyriadPro";
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--fg);
+}
+
+.meta-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 28px;
+    row-gap: 6px;
+}
+
+.meta-label {
+    opacity: 0.65;
+}
+
+.meta-value {
+    text-align: right;
+}
+
+.lightbox.show-meta .lightbox-meta {
+    display: block;
+}
+
+footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.7;
 }
 </style>
 </head>
@@ -162,142 +137,107 @@ header {
 
 <header>canoncanon.cc</header>
 
-<div class="gallery-wrapper">
-    <div id="gallery" class="gallery"></div>
+<div class="gallery-wrap">
+    <div class="gallery" id="gallery"></div>
 </div>
 
-<!-- LIGHTBOX -->
-<div id="lightbox" class="lightbox">
-    <div class="nav left">&#10094;</div>
-    <img id="lightbox-img" />
-    <div class="nav right">&#10095;</div>
-
-    <div class="info-panel" id="infoPanel">
-        <div class="info-grid" id="infoGrid"></div>
-    </div>
-
-    <div class="controls">
-        <div class="counter" id="counter"></div>
-        <div class="info-toggle" id="infoToggle">INFO</div>
-    </div>
+<div class="lightbox" id="lightbox">
+    <img id="lightboxImg" alt="">
+    <div class="counter" id="counter"></div>
+    <button class="info-btn" id="infoBtn">INFO</button>
+    <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
+
+<footer>
+© 2025 — Photos licensed under CC BY-NC-SA 4.0
+</footer>
 
 <script>
 let photos = [];
 let currentIndex = 0;
+let infoOpen = false;
+let touchStartX = 0;
 
-const gallery = document.getElementById("gallery");
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-const infoPanel = document.getElementById("infoPanel");
-const infoGrid = document.getElementById("infoGrid");
-const counter = document.getElementById("counter");
-
-/* =======================
-   LOAD JSON
-======================= */
 fetch("photos/photos.json")
 .then(r => r.json())
 .then(data => {
     photos = data;
+    const gallery = document.getElementById("gallery");
 
-    photos.forEach((p, i) => {
+    data.forEach((p, i) => {
         const img = document.createElement("img");
         img.src = "photos/thumbs/" + p.FileName.replace(/\.jpg$/i, ".webp");
+        img.loading = "lazy";
+        img.onerror = () => {
+            img.onerror = null;
+            img.src = "photos/thumbs/" + p.FileName;
+        };
         img.onclick = () => openLightbox(i);
         gallery.appendChild(img);
     });
 });
 
-/* =======================
-   LIGHTBOX
-======================= */
-function openLightbox(index) {
-    currentIndex = index;
-    const p = photos[index];
-
-    lightboxImg.src = "photos/full/" + p.FileName;
-    counter.textContent = `(${index + 1} / ${photos.length})`;
-
-    updateInfo(p);
-
-    lightbox.classList.add("active");
-}
-
-function closeLightbox() {
-    lightbox.classList.remove("active");
-}
-
-/* =======================
-   INFO
-======================= */
-function updateInfo(p) {
-    infoGrid.innerHTML = `
-        <div class="info-label">Camera</div><div>${p.Model || ""}</div>
-        <div class="info-label">Lens</div><div>${p.LensModel || ""}</div>
-        <div class="info-label">Focal Length</div><div>${p.FocalLength || ""}</div>
-        <div class="info-label">Aperture</div><div>f/${p.Aperture || ""}</div>
-        <div class="info-label">Shutter</div><div>${p.ShutterSpeed || ""}</div>
-        <div class="info-label">ISO</div><div>${p.ISO || ""}</div>
-        <div class="info-label">Date</div><div>${p.DateTimeOriginal || ""}</div>
+function renderMeta(p) {
+    document.getElementById("lightboxMeta").innerHTML = `
+        <div class="meta-grid">
+            <div class="meta-label">Camera</div><div class="meta-value">${p.Model || ""}</div>
+            <div class="meta-label">Lens</div><div class="meta-value">${p.LensModel || ""}</div>
+            <div class="meta-label">Focal</div><div class="meta-value">${p.FocalLength || ""}</div>
+            <div class="meta-label">Aperture</div><div class="meta-value">${p.Aperture ? "f/" + p.Aperture : ""}</div>
+            <div class="meta-label">Shutter</div><div class="meta-value">${p.ShutterSpeed || ""}</div>
+            <div class="meta-label">ISO</div><div class="meta-value">${p.ISO ? "ISO " + p.ISO : ""}</div>
+            <div class="meta-label">Date</div><div class="meta-value">${p.DateTimeOriginal ? p.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}</div>
+        </div>
     `;
 }
 
-/* =======================
-   NAVIGATION
-======================= */
-function next() {
-    if (currentIndex < photos.length - 1) {
-        openLightbox(currentIndex + 1);
-    }
+function openLightbox(i) {
+    currentIndex = i;
+    const p = photos[i];
+
+    document.getElementById("lightboxImg").src = "photos/full/" + p.FileName;
+    document.getElementById("counter").textContent = `(${i + 1}/${photos.length})`;
+
+    renderMeta(p);
+
+    const lb = document.getElementById("lightbox");
+    lb.style.display = "flex";
+    lb.classList.toggle("show-meta", infoOpen);
 }
 
-function prev() {
-    if (currentIndex > 0) {
-        openLightbox(currentIndex - 1);
+document.getElementById("lightbox").addEventListener("click", e => {
+    if (e.target.id === "lightbox") {
+        e.currentTarget.style.display = "none";
+        infoOpen = false;
     }
-}
-
-document.querySelector(".nav.right").onclick = next;
-document.querySelector(".nav.left").onclick = prev;
-
-document.addEventListener("keydown", e => {
-    if (!lightbox.classList.contains("active")) return;
-    if (e.key === "ArrowRight") next();
-    if (e.key === "ArrowLeft") prev();
-    if (e.key === "Escape") closeLightbox();
 });
 
-/* =======================
-   INFO TOGGLE
-======================= */
-document.getElementById("infoToggle").onclick = () => {
-    infoPanel.classList.toggle("active");
+document.getElementById("infoBtn").onclick = e => {
+    e.stopPropagation();
+    infoOpen = !infoOpen;
+    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
-/* =======================
-   CLICK OUTSIDE
-======================= */
-lightbox.addEventListener("click", e => {
-    if (e.target === lightbox) closeLightbox();
+document.addEventListener("keydown", e => {
+    const lb = document.getElementById("lightbox");
+    if (lb.style.display !== "flex") return;
+
+    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
+    if (e.key === "ArrowLeft" && currentIndex > 0) openLightbox(currentIndex - 1);
+    if (e.key === "Escape") { lb.style.display = "none"; infoOpen = false; }
 });
 
-/* =======================
-   SWIPE (MOBILE)
-======================= */
-let startX = 0;
+const lbEl = document.getElementById("lightbox");
 
-lightbox.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
+lbEl.addEventListener("touchstart", e => {
+    touchStartX = e.touches[0].clientX;
 }, { passive: true });
 
-lightbox.addEventListener("touchend", e => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX;
-
-    if (Math.abs(diff) > 50) {
-        diff < 0 ? next() : prev();
-    }
+lbEl.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) < 50) return;
+    if (dx < 0 && currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
+    if (dx > 0 && currentIndex > 0) openLightbox(currentIndex - 1);
 });
 </script>
 
