@@ -22,7 +22,7 @@
 }
 
 /* ------------------------------------------------------- */
-/*  Base Layout — light by default                         */
+/*  Base Layout                                            */
 /* ------------------------------------------------------- */
 body {
     margin: 0;
@@ -32,7 +32,6 @@ body {
     color: #202122;
 }
 
-/* Light mode */
 @media (prefers-color-scheme: light) {
     body {
         background: #ffffff;
@@ -40,7 +39,6 @@ body {
     }
 }
 
-/* Dark mode */
 @media (prefers-color-scheme: dark) {
     body {
         background: #2e2e2e;
@@ -68,6 +66,7 @@ header {
     gap: 12px;
     padding: 12px;
 }
+
 .gallery img {
     width: 100%;
     height: 100%;
@@ -76,6 +75,7 @@ header {
     cursor: pointer;
     transition: transform 0.15s ease;
 }
+
 .gallery img:hover {
     transform: scale(1.04);
 }
@@ -92,6 +92,7 @@ header {
     justify-content: center;
     z-index: 999;
 }
+
 .lightbox img {
     max-width: 92vw;
     max-height: 92vh;
@@ -109,11 +110,13 @@ header {
     cursor: pointer;
     user-select: none;
     opacity: 0.8;
-    color: inherit; /* matches text color in dark/light */
+    color: inherit;
 }
+
 .nav-btn:hover {
     opacity: 1;
 }
+
 #prevBtn { left: 20px; }
 #nextBtn { right: 20px; }
 
@@ -128,12 +131,12 @@ footer {
 }
 </style>
 
-<!-- Metadata + Icons -->
 <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
 <link rel="shortcut icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" sizes="64x64" href="favicon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>canon²</title>
 <meta name="description" content="an awesome gallery of awesome stuff">
 
@@ -145,7 +148,7 @@ footer {
 <div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox">
-    <img id="lightboxImg">
+    <img id="lightboxImg" alt="">
     <div id="prevBtn" class="nav-btn">⟸</div>
     <div id="nextBtn" class="nav-btn">⟹</div>
 </div>
@@ -159,45 +162,56 @@ footer {
 let photoList = [];
 let currentIndex = 0;
 
-// Load photos.json
+/* ------------------------------------------------------- */
+/*  Load photo list                                        */
+/* ------------------------------------------------------- */
 fetch("photos/photos.json")
-  .then(r => r.json())
-  .then(list => {
-      photoList = list;
-      const gallery = document.getElementById("gallery");
+    .then(res => res.json())
+    .then(list => {
+        photoList = list;
+        const gallery = document.getElementById("gallery");
 
-      list.forEach((name, idx) => {
-          const img = document.createElement("img");
+        list.forEach((name, idx) => {
+            const img = document.createElement("img");
 
-          // WebP thumbnail
-          img.src = "photos/thumbs/" + name + ".webp";
-          img.loading = "lazy";
+            // IMG_0120.jpg → IMG_0120.webp
+            const webpName = name.replace(/\.jpg$/i, ".webp");
 
-          // Fallback to JPG if WebP fails
-          img.onerror = () => {
-              img.src = "photos/thumbs/" + name + ".jpg";
-          };
+            img.src = "photos/thumb/" + webpName;
+            img.loading = "lazy";
 
-          img.onclick = () => openLightbox(idx);
-          gallery.appendChild(img);
-      });
-  });
+            // Fallback to JPG thumbnail
+            img.onerror = () => {
+                img.onerror = null; // prevent infinite loop
+                img.src = "photos/thumb/" + name;
+            };
 
+            img.onclick = () => openLightbox(idx);
+            gallery.appendChild(img);
+        });
+    })
+    .catch(err => {
+        console.error("Failed to load photos.json:", err);
+    });
+
+/* ------------------------------------------------------- */
+/*  Lightbox                                               */
+/* ------------------------------------------------------- */
 function openLightbox(index) {
     currentIndex = index;
     document.getElementById("lightboxImg").src =
-        "photos/full/" + photoList[index] + ".jpg";
+        "photos/full/" + photoList[index];
     document.getElementById("lightbox").style.display = "flex";
 }
 
-// Close when clicking background
+// Close when clicking backdrop
 document.getElementById("lightbox").onclick = (e) => {
     if (e.target.id === "lightbox") {
         document.getElementById("lightbox").style.display = "none";
     }
 };
 
-// Next / Prev buttons
+// Navigation buttons
 document.getElementById("nextBtn").onclick = (e) => {
     e.stopPropagation();
     if (currentIndex < photoList.length - 1) {
@@ -213,19 +227,19 @@ document.getElementById("prevBtn").onclick = (e) => {
 };
 
 // Keyboard navigation
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", (e) => {
     const lightbox = document.getElementById("lightbox");
     if (lightbox.style.display !== "flex") return;
 
-    if (event.key === "ArrowRight" && currentIndex < photoList.length - 1) {
+    if (e.key === "ArrowRight" && currentIndex < photoList.length - 1) {
         openLightbox(currentIndex + 1);
     }
 
-    if (event.key === "ArrowLeft" && currentIndex > 0) {
+    if (e.key === "ArrowLeft" && currentIndex > 0) {
         openLightbox(currentIndex - 1);
     }
 
-    if (event.key === "Escape") {
+    if (e.key === "Escape") {
         lightbox.style.display = "none";
     }
 });
