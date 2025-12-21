@@ -5,33 +5,55 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>canon²</title>
 
+<link rel="icon" type="image/png" href="/favicon.png">
+
 <style>
+/* ------------------------------------------------------- */
+/* Fonts — EXACTLY matching ABOUT page                     */
+/* ------------------------------------------------------- */
 @font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2');
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'MyriadPro';
-    src: url('/fonts/MyriadPro-Regular.woff2') format('woff2'),
-         url('/fonts/MyriadPro-Regular.woff') format('woff');
+    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
+/* ------------------------------------------------------- */
+/* Base layout                                             */
+/* ------------------------------------------------------- */
 body {
     margin: 0;
-    font-family: 'MSSans', sans-serif;
+    padding: 0;
+    font-family: 'MyriadPro';
+    font-weight: 400;
     background: #2e2e2e;
     color: #f0b6e7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 header {
     padding: 28px;
     text-align: center;
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 400;
+    letter-spacing: -0.015em;
 }
 
-/* Masonry gallery */
+/* ------------------------------------------------------- */
+/* Masonry gallery                                         */
+/* ------------------------------------------------------- */
 .gallery-wrap {
     max-width: 1400px;
     margin: 0 auto;
@@ -53,7 +75,9 @@ header {
     cursor: pointer;
 }
 
-/* Lightbox */
+/* ------------------------------------------------------- */
+/* Lightbox                                                */
+/* ------------------------------------------------------- */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -74,21 +98,22 @@ header {
     position: absolute;
     bottom: 18px;
     left: 18px;
-    color: #fff;
     font-size: 14px;
+    font-weight: 300;
+    color: #ffffff;
     opacity: 0.9;
 }
 
-/* INFO button */
 .info-btn {
     position: absolute;
     bottom: 18px;
     right: 18px;
     background: rgba(0,0,0,0.75);
-    color: #fff;
+    color: #ffffff;
     border: none;
-    padding: 8px 12px;
+    padding: 8px 14px;
     font-size: 13px;
+    font-weight: 400;
     letter-spacing: 0.08em;
     cursor: pointer;
 }
@@ -99,28 +124,26 @@ header {
     bottom: 56px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(420px, calc(100vw - 40px));
+    width: min(520px, calc(100vw - 40px));
     background: rgba(0,0,0,0.78);
-    padding: 18px 20px;
+    padding: 20px 22px;
     display: none;
 
-    font-family: 'MyriadPro', sans-serif;
     font-size: 15px;
+    font-weight: 300;
     line-height: 1.6;
-    color: #fff;
+    color: #ffffff;
 }
 
-/* Grid layout for metadata rows */
 .meta-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    column-gap: 24px;
+    column-gap: 28px;
     row-gap: 6px;
 }
 
 .meta-label {
-    text-align: left;
-    opacity: 0.75;
+    opacity: 0.65;
 }
 
 .meta-value {
@@ -131,10 +154,12 @@ header {
     display: block;
 }
 
+/* Footer */
 footer {
     padding: 24px;
     text-align: center;
     font-size: 13px;
+    font-weight: 300;
     opacity: 0.7;
 }
 </style>
@@ -162,6 +187,7 @@ footer {
 <script>
 let photos = [];
 let currentIndex = 0;
+let infoOpen = false;
 
 fetch("photos/photos.json")
     .then(r => r.json())
@@ -170,14 +196,13 @@ fetch("photos/photos.json")
         const gallery = document.getElementById("gallery");
 
         data.forEach((entry, idx) => {
-            const file = entry.FileName;
             const img = document.createElement("img");
-
-            img.src = "photos/thumbs/" + file.replace(/\.jpg$/i, ".webp");
+            img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
             img.loading = "lazy";
+
             img.onerror = () => {
                 img.onerror = null;
-                img.src = "photos/thumbs/" + file;
+                img.src = "photos/thumbs/" + entry.FileName;
             };
 
             img.onclick = () => openLightbox(idx);
@@ -185,16 +210,7 @@ fetch("photos/photos.json")
         });
     });
 
-function openLightbox(index) {
-    currentIndex = index;
-    const entry = photos[index];
-
-    document.getElementById("lightboxImg").src =
-        "photos/full/" + entry.FileName;
-
-    document.getElementById("counter").textContent =
-        `(${index + 1}/${photos.length})`;
-
+function renderMeta(entry) {
     document.getElementById("lightboxMeta").innerHTML = `
         <div class="meta-grid">
             <div class="meta-label">Camera</div><div class="meta-value">${entry.Model || ""}</div>
@@ -206,23 +222,38 @@ function openLightbox(index) {
             <div class="meta-label">Date</div><div class="meta-value">${entry.DateTimeOriginal ? entry.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}</div>
         </div>
     `;
-
-    const lb = document.getElementById("lightbox");
-    lb.classList.remove("show-meta");
-    lb.style.display = "flex";
 }
 
-/* Close on background click */
+function openLightbox(index) {
+    currentIndex = index;
+    const entry = photos[index];
+
+    document.getElementById("lightboxImg").src =
+        "photos/full/" + entry.FileName;
+
+    document.getElementById("counter").textContent =
+        `(${index + 1}/${photos.length})`;
+
+    renderMeta(entry);
+
+    const lb = document.getElementById("lightbox");
+    lb.style.display = "flex";
+    lb.classList.toggle("show-meta", infoOpen);
+}
+
+/* Close */
 document.getElementById("lightbox").addEventListener("click", e => {
     if (e.target.id === "lightbox") {
         e.currentTarget.style.display = "none";
+        infoOpen = false;
     }
 });
 
 /* INFO toggle */
 document.getElementById("infoBtn").onclick = e => {
     e.stopPropagation();
-    document.getElementById("lightbox").classList.toggle("show-meta");
+    infoOpen = !infoOpen;
+    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
 /* Keyboard navigation */
@@ -238,6 +269,7 @@ document.addEventListener("keydown", e => {
     }
     if (e.key === "Escape") {
         lb.style.display = "none";
+        infoOpen = false;
     }
 });
 </script>
