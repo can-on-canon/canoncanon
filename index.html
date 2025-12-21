@@ -177,13 +177,13 @@ fetch("photos/photos.json")
             // IMG_0120.jpg → IMG_0120.webp
             const webpName = name.replace(/\.jpg$/i, ".webp");
 
-            img.src = "photos/thumb/" + webpName;
+            img.src = "photos/thumbs/" + webpName;
             img.loading = "lazy";
 
             // Fallback to JPG thumbnail
             img.onerror = () => {
                 img.onerror = null; // prevent infinite loop
-                img.src = "photos/thumb/" + name;
+                img.src = "photos/thumbs/" + name;
             };
 
             img.onclick = () => openLightbox(idx);
