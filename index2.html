@@ -14,15 +14,8 @@
 body {
     margin: 0;
     font-family: 'MSSans', sans-serif;
-    background: #ffffff;
-    color: #202122;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background: #2e2e2e;
-        color: #f0b6e7;
-    }
+    background: #2e2e2e;
+    color: #f0b6e7;
 }
 
 header {
@@ -32,27 +25,37 @@ header {
     font-weight: 600;
 }
 
-/* ---------------- Gallery ---------------- */
+/* ---------- Masonry Gallery ---------- */
 .gallery-wrap {
-    max-width: 1300px;
+    max-width: 1350px;
     margin: 0 auto;
     padding: 0 24px 40px;
 }
 
 .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    column-count: 4;
+    column-gap: 8px;
+}
+
+@media (max-width: 1200px) {
+    .gallery { column-count: 3; }
+}
+@media (max-width: 800px) {
+    .gallery { column-count: 2; }
+}
+@media (max-width: 500px) {
+    .gallery { column-count: 1; }
 }
 
 .gallery img {
-    height: 280px;
-    width: auto;
+    width: 100%;
+    height: auto;
     display: block;
+    margin-bottom: 8px;
     cursor: pointer;
 }
 
-/* ---------------- Lightbox ---------------- */
+/* ---------- Lightbox ---------- */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -68,21 +71,17 @@ header {
     max-height: 92vh;
 }
 
-/* Metadata panel */
-.lightbox-meta {
+/* Counter bottom-left */
+.counter {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: rgba(0,0,0,0.75);
+    bottom: 16px;
+    left: 16px;
     color: #fff;
     font-size: 13px;
-    line-height: 1.4;
-    padding: 14px 16px;
-    display: none;
+    opacity: 0.85;
 }
 
-/* Info button */
+/* Info button bottom-right */
 .info-btn {
     position: absolute;
     bottom: 16px;
@@ -93,6 +92,20 @@ header {
     padding: 6px 10px;
     font-size: 13px;
     cursor: pointer;
+}
+
+/* Metadata panel */
+.lightbox-meta {
+    position: absolute;
+    bottom: 48px;
+    left: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 14px 16px;
+    display: none;
 }
 
 .lightbox.show-meta .lightbox-meta {
@@ -118,6 +131,7 @@ footer {
 
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" alt="">
+    <div class="counter" id="counter"></div>
     <button class="info-btn" id="infoBtn">(i)</button>
     <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
@@ -159,12 +173,12 @@ function openLightbox(index) {
     const entry = photos[index];
     const file = typeof entry === "string" ? entry : entry.file;
 
-    const lb = document.getElementById("lightbox");
-    const img = document.getElementById("lightboxImg");
+    document.getElementById("lightboxImg").src =
+        "photos/full/" + file;
 
-    img.src = "photos/full/" + file;
+    document.getElementById("counter").textContent =
+        `(${index + 1}/${photos.length})`;
 
-    // Metadata
     const meta = document.getElementById("lightboxMeta");
     if (typeof entry === "object") {
         meta.innerHTML = `
@@ -179,27 +193,37 @@ function openLightbox(index) {
         meta.innerHTML = "";
     }
 
+    const lb = document.getElementById("lightbox");
     lb.classList.remove("show-meta");
     lb.style.display = "flex";
 }
 
-/* Close ONLY when clicking background */
+/* Close only on background click */
 document.getElementById("lightbox").addEventListener("click", e => {
     if (e.target.id === "lightbox") {
         e.currentTarget.style.display = "none";
     }
 });
 
-/* Toggle metadata */
+/* Info toggle */
 document.getElementById("infoBtn").onclick = e => {
     e.stopPropagation();
     document.getElementById("lightbox").classList.toggle("show-meta");
 };
 
-/* Escape to close */
+/* Keyboard navigation */
 document.addEventListener("keydown", e => {
+    const lb = document.getElementById("lightbox");
+    if (lb.style.display !== "flex") return;
+
+    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) {
+        openLightbox(currentIndex + 1);
+    }
+    if (e.key === "ArrowLeft" && currentIndex > 0) {
+        openLightbox(currentIndex - 1);
+    }
     if (e.key === "Escape") {
-        document.getElementById("lightbox").style.display = "none";
+        lb.style.display = "none";
     }
 });
 </script>
