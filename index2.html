@@ -5,20 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>canon²</title>
-<meta name="description" content="Photography archive">
 
 <style>
 @font-face {
     font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif.woff') format('woff');
-    font-weight: 400;
-}
-@font-face {
-    font-family: 'MSSans';
-    src: url('/fonts/converted/ms_sans_serif_bold.woff2') format('woff2'),
-         url('/fonts/converted/ms_sans_serif_bold.woff') format('woff');
-    font-weight: 700;
+    src: url('/fonts/converted/ms_sans_serif.woff2') format('woff2');
 }
 
 body {
@@ -42,56 +33,56 @@ header {
     font-weight: 600;
 }
 
+/* -------------------------------- */
+/*  Narrow centered gallery          */
+/* -------------------------------- */
+.gallery-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+}
+
 .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 28px;
-    padding: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
-figure {
-    margin: 0;
+.photo {
     position: relative;
+    cursor: pointer;
 }
 
-figure img {
-    width: 100%;
-    height: auto;
+.photo img {
     display: block;
-    border-radius: 6px;
-    cursor: pointer;
+    height: 280px; /* target row height */
+    width: auto;
 }
 
-.info-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(0,0,0,0.65);
-    color: white;
-    font-size: 14px;
-    cursor: pointer;
-}
-
+/* -------------------------------- */
+/*  Metadata overlay (on click)      */
+/* -------------------------------- */
 .meta {
     position: absolute;
-    inset: auto 0 0 0;
+    inset: 0;
     background: rgba(0,0,0,0.78);
     color: #fff;
     font-size: 13px;
     line-height: 1.4;
-    padding: 12px 14px;
+    padding: 16px;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.2s ease;
 }
 
-figure.show-meta .meta {
+.photo.show-meta .meta {
     opacity: 1;
+    pointer-events: auto;
 }
 
+/* -------------------------------- */
+/*  Lightbox                         */
+/* -------------------------------- */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -105,7 +96,6 @@ figure.show-meta .meta {
 .lightbox img {
     max-width: 92vw;
     max-height: 92vh;
-    border-radius: 12px;
 }
 
 footer {
@@ -121,7 +111,9 @@ footer {
 
 <header>canoncanon.cc</header>
 
-<div class="gallery" id="gallery"></div>
+<div class="gallery-wrap">
+    <div class="gallery" id="gallery"></div>
+</div>
 
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" alt="">
@@ -133,7 +125,6 @@ footer {
 
 <script>
 let photos = [];
-let currentIndex = 0;
 
 fetch("photos/photos.json")
     .then(r => r.json())
@@ -142,57 +133,49 @@ fetch("photos/photos.json")
         const gallery = document.getElementById("gallery");
 
         data.forEach((entry, idx) => {
-            // SUPPORT BOTH STRING AND OBJECT FORMATS
             const file = typeof entry === "string" ? entry : entry.file;
 
-            const camera = entry.camera || "";
-            const lens = entry.lens || "";
-            const date = entry.date || "";
-            const focal = entry.focal || "";
-            const aperture = entry.aperture || "";
-            const shutter = entry.shutter || "";
-            const iso = entry.iso ? "ISO " + entry.iso : "";
-
-            const fig = document.createElement("figure");
+            const photo = document.createElement("div");
+            photo.className = "photo";
 
             const img = document.createElement("img");
             img.src = "photos/thumbs/" + file.replace(/\.jpg$/i, ".webp");
             img.loading = "lazy";
 
-            // Fallback if webp missing
             img.onerror = () => {
                 img.onerror = null;
                 img.src = "photos/thumbs/" + file;
             };
 
-            img.onclick = () => openLightbox(idx);
-
-            const btn = document.createElement("button");
-            btn.className = "info-btn";
-            btn.textContent = "ⓘ";
-            btn.onclick = e => {
-                e.stopPropagation();
-                fig.classList.toggle("show-meta");
+            img.onclick = () => {
+                photo.classList.toggle("show-meta");
             };
 
-            const meta = document.createElement("figcaption");
-            meta.className = "meta";
-            meta.innerHTML = `
-                ${camera ? `<strong>${camera}</strong><br>` : ""}
-                ${lens ? `${lens}<br>` : ""}
-                ${[focal, aperture, shutter, iso].filter(Boolean).join(" · ")}
-                ${date ? `<br>${date}` : ""}
-            `;
+            img.ondblclick = e => {
+                e.stopPropagation();
+                openLightbox(file);
+            };
 
-            fig.append(img, btn, meta);
-            gallery.appendChild(fig);
+            const meta = document.createElement("div");
+            meta.className = "meta";
+
+            if (typeof entry === "object") {
+                meta.innerHTML = `
+                    ${entry.camera || ""}<br>
+                    ${entry.lens || ""}<br>
+                    ${[entry.focal, entry.aperture, entry.shutter, entry.iso && "ISO " + entry.iso]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    ${entry.date ? "<br>" + entry.date : ""}
+                `;
+            }
+
+            photo.append(img, meta);
+            gallery.appendChild(photo);
         });
     });
 
-function openLightbox(index) {
-    const entry = photos[index];
-    const file = typeof entry === "string" ? entry : entry.file;
-
+function openLightbox(file) {
     document.getElementById("lightboxImg").src =
         "photos/full/" + file;
     document.getElementById("lightbox").style.display = "flex";
@@ -201,12 +184,6 @@ function openLightbox(index) {
 document.getElementById("lightbox").onclick = () => {
     document.getElementById("lightbox").style.display = "none";
 };
-
-document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-        document.getElementById("lightbox").style.display = "none";
-    }
-});
 </script>
 
 </body>
