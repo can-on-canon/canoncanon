@@ -5,31 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>canoncanon.cc</title>
 
-<link rel="icon" href="/favicon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
+/* ================= Fonts ================= */
+
 @font-face {
-    font-family: "MyriadPro";
-    src: url("/fonts/converted/MyriadPro-Regular.woff2") format("woff2"),
-         url("/fonts/converted/MyriadPro-Regular.woff") format("woff");
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
+/* ================= Theme ================= */
+
+body[data-theme="dark"] {
+    background: #2e2e2e;
+    color: #f0b6e7;
+}
+
+body[data-theme="light"] {
+    background: #f5f5f5;
+    color: #2a2a2a;
+}
+
+/* ================= Base ================= */
+
 body {
     margin: 0;
-    font-family: inherit;
-    background: var(--bg);
-    color: var(--fg);
+    font-family: 'MyriadPro';
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
 }
+
+/* ================= Header ================= */
 
 header {
     padding: 28px;
     text-align: center;
     font-size: 28px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
+    position: relative;
 }
+
+.theme-toggle {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    background: none;
+    border: 1px solid currentColor;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+/* ================= Gallery ================= */
 
 .gallery-wrap {
     max-width: 1400px;
@@ -50,13 +92,14 @@ header {
     width: 100%;
     margin-bottom: 8px;
     cursor: pointer;
-    display: block;
 }
+
+/* ================= Lightbox ================= */
 
 .lightbox {
     position: fixed;
     inset: 0;
-    background: color-mix(in srgb, var(--bg) 92%, black);
+    background: rgba(0,0,0,0.92);
     display: none;
     align-items: center;
     justify-content: center;
@@ -68,21 +111,22 @@ header {
     max-height: 92vh;
 }
 
+/* ================= UI ================= */
+
 .counter {
     position: absolute;
     bottom: 18px;
     left: 18px;
     font-size: 14px;
-    font-weight: 300;
-    color: var(--accent);
+    color: #fff;
 }
 
 .info-btn {
     position: absolute;
     bottom: 18px;
     right: 18px;
-    background: color-mix(in srgb, var(--bg) 80%, black);
-    color: var(--fg);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
     border: none;
     padding: 8px 14px;
     font-size: 13px;
@@ -90,30 +134,31 @@ header {
     cursor: pointer;
 }
 
+/* ================= Metadata ================= */
+
 .lightbox-meta {
     position: absolute;
     bottom: 56px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(560px, calc(100vw - 40px));
-    background: color-mix(in srgb, var(--bg) 78%, black);
-    padding: 22px 24px;
+    width: min(620px, calc(100vw - 40px));
+    background: rgba(0,0,0,0.78);
+    padding: 24px 28px;
     display: none;
-    font-family: "MyriadPro";
     font-size: 16px;
     line-height: 1.6;
-    color: var(--fg);
+    color: #fff;
 }
 
 .meta-grid {
     display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: 28px;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 40px;
     row-gap: 6px;
 }
 
 .meta-label {
-    opacity: 0.65;
+    opacity: 0.6;
 }
 
 .meta-value {
@@ -124,6 +169,34 @@ header {
     display: block;
 }
 
+/* ================= Mobile Arrows ================= */
+
+.mobile-nav {
+    display: none;
+    position: absolute;
+    bottom: 92px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 48px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    padding: 10px 26px;
+}
+
+.mobile-nav button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mobile-nav { display: flex; }
+}
+
+/* ================= Footer ================= */
+
 footer {
     padding: 24px;
     text-align: center;
@@ -133,9 +206,12 @@ footer {
 </style>
 </head>
 
-<body>
+<body data-theme="dark">
 
-<header>canoncanon.cc</header>
+<header>
+    canoncanon.cc
+    <button class="theme-toggle" id="themeToggle">LIGHT</button>
+</header>
 
 <div class="gallery-wrap">
     <div class="gallery" id="gallery"></div>
@@ -145,6 +221,12 @@ footer {
     <img id="lightboxImg" alt="">
     <div class="counter" id="counter"></div>
     <button class="info-btn" id="infoBtn">INFO</button>
+
+    <div class="mobile-nav">
+        <button id="prevBtn">&lt;</button>
+        <button id="nextBtn">&gt;</button>
+    </div>
+
     <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
 
@@ -156,61 +238,102 @@ footer {
 let photos = [];
 let currentIndex = 0;
 let infoOpen = false;
-let touchStartX = 0;
+
+/* ================= Theme ================= */
+
+const themeToggle = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) document.body.dataset.theme = savedTheme;
+
+themeToggle.textContent =
+    document.body.dataset.theme === "dark" ? "LIGHT" : "DARK";
+
+themeToggle.onclick = () => {
+    const newTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+    document.body.dataset.theme = newTheme;
+    localStorage.setItem("theme", newTheme);
+    themeToggle.textContent = newTheme === "dark" ? "LIGHT" : "DARK";
+};
+
+/* ================= Metadata Field Map ================= */
+
+const META_FIELDS = [
+    ["Film", "Film"],
+    ["Model", "Camera"],
+    ["Camera", "Camera"],
+    ["LensModel", "Lens"],
+    ["Lens", "Lens"],
+    ["FocalLength", "Focal"],
+    ["Aperture", "Aperture"],
+    ["ShutterSpeed", "Shutter"],
+    ["ISO", "ISO"],
+    ["DateTimeOriginal", "Date"],
+    ["Date", "Date"]
+];
+
+/* ================= Gallery ================= */
 
 fetch("photos/photos.json")
-.then(r => r.json())
-.then(data => {
-    photos = data;
-    const gallery = document.getElementById("gallery");
+    .then(r => r.json())
+    .then(data => {
+        photos = data;
+        const gallery = document.getElementById("gallery");
 
-    data.forEach((p, i) => {
-        const img = document.createElement("img");
-        img.src = "photos/thumbs/" + p.FileName.replace(/\.jpg$/i, ".webp");
-        img.loading = "lazy";
-        img.onerror = () => {
-            img.onerror = null;
-            img.src = "photos/thumbs/" + p.FileName;
-        };
-        img.onclick = () => openLightbox(i);
-        gallery.appendChild(img);
+        data.forEach((entry, idx) => {
+            const img = document.createElement("img");
+            img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
+            img.loading = "lazy";
+
+            img.onerror = () => {
+                img.src = "photos/thumbs/" + entry.FileName;
+            };
+
+            img.onclick = () => openLightbox(idx);
+            gallery.appendChild(img);
+        });
     });
-});
 
-function renderMeta(p) {
-    document.getElementById("lightboxMeta").innerHTML = `
-        <div class="meta-grid">
-            <div class="meta-label">Camera</div><div class="meta-value">${p.Model || ""}</div>
-            <div class="meta-label">Lens</div><div class="meta-value">${p.LensModel || ""}</div>
-            <div class="meta-label">Focal</div><div class="meta-value">${p.FocalLength || ""}</div>
-            <div class="meta-label">Aperture</div><div class="meta-value">${p.Aperture ? "f/" + p.Aperture : ""}</div>
-            <div class="meta-label">Shutter</div><div class="meta-value">${p.ShutterSpeed || ""}</div>
-            <div class="meta-label">ISO</div><div class="meta-value">${p.ISO ? "ISO " + p.ISO : ""}</div>
-            <div class="meta-label">Date</div><div class="meta-value">${p.DateTimeOriginal ? p.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}</div>
-        </div>
-    `;
+function renderMeta(entry) {
+    const rows = [];
+
+    META_FIELDS.forEach(([key, label]) => {
+        if (!entry[key]) return;
+
+        let value = entry[key];
+
+        if (key === "Aperture") value = "f/" + value;
+        if (key === "ISO") value = "ISO " + value;
+        if (key === "DateTimeOriginal")
+            value = value.split(" ")[0].replace(/:/g, "-");
+
+        rows.push(`
+            <div class="meta-label">${label}</div>
+            <div class="meta-value">${value}</div>
+        `);
+    });
+
+    document.getElementById("lightboxMeta").innerHTML =
+        `<div class="meta-grid">${rows.join("")}</div>`;
 }
 
-function openLightbox(i) {
-    currentIndex = i;
-    const p = photos[i];
+function openLightbox(index) {
+    currentIndex = index;
+    const entry = photos[index];
 
-    document.getElementById("lightboxImg").src = "photos/full/" + p.FileName;
-    document.getElementById("counter").textContent = `(${i + 1}/${photos.length})`;
+    document.getElementById("lightboxImg").src =
+        "photos/full/" + entry.FileName;
 
-    renderMeta(p);
+    document.getElementById("counter").textContent =
+        `(${index + 1}/${photos.length})`;
+
+    renderMeta(entry);
 
     const lb = document.getElementById("lightbox");
     lb.style.display = "flex";
     lb.classList.toggle("show-meta", infoOpen);
 }
 
-document.getElementById("lightbox").addEventListener("click", e => {
-    if (e.target.id === "lightbox") {
-        e.currentTarget.style.display = "none";
-        infoOpen = false;
-    }
-});
+/* ================= Controls ================= */
 
 document.getElementById("infoBtn").onclick = e => {
     e.stopPropagation();
@@ -218,26 +341,27 @@ document.getElementById("infoBtn").onclick = e => {
     document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
+document.getElementById("prevBtn").onclick = e => {
+    e.stopPropagation();
+    if (currentIndex > 0) openLightbox(currentIndex - 1);
+};
+
+document.getElementById("nextBtn").onclick = e => {
+    e.stopPropagation();
+    if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
+};
+
 document.addEventListener("keydown", e => {
-    const lb = document.getElementById("lightbox");
-    if (lb.style.display !== "flex") return;
+    if (document.getElementById("lightbox").style.display !== "flex") return;
 
-    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
-    if (e.key === "ArrowLeft" && currentIndex > 0) openLightbox(currentIndex - 1);
-    if (e.key === "Escape") { lb.style.display = "none"; infoOpen = false; }
-});
+    if (e.key === "ArrowRight" && currentIndex < photos.length - 1)
+        openLightbox(currentIndex + 1);
 
-const lbEl = document.getElementById("lightbox");
+    if (e.key === "ArrowLeft" && currentIndex > 0)
+        openLightbox(currentIndex - 1);
 
-lbEl.addEventListener("touchstart", e => {
-    touchStartX = e.touches[0].clientX;
-}, { passive: true });
-
-lbEl.addEventListener("touchend", e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) < 50) return;
-    if (dx < 0 && currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
-    if (dx > 0 && currentIndex > 0) openLightbox(currentIndex - 1);
+    if (e.key === "Escape")
+        document.getElementById("lightbox").style.display = "none";
 });
 </script>
 
