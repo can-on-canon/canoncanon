@@ -1,274 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>canon²</title>
 
-<link rel="icon" type="image/png" href="favicon.png">
-
 <style>
-/* ---------------- Fonts (Myriad everywhere) ---------------- */
 @font-face {
-    font-family: 'MyriadPro';
-    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
-         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
-    font-weight: 300;
-}
-@font-face {
-    font-family: 'MyriadPro';
-    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
-         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
-    font-weight: 400;
+  font-family: 'MyriadPro';
+  src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+       url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
 }
 
-/* ---------------- Base / system theme ---------------- */
 body {
-    margin: 0;
-    font-family: 'MyriadPro', sans-serif;
-    font-weight: 400;
-    background: #f3f3f3;
-    color: #f78c20;
+  margin: 0;
+  font-family: 'MyriadPro', sans-serif;
+  background: #f3f3f3;
+  color: #f78c20;
 }
 @media (prefers-color-scheme: dark) {
-    body {
-        background: #2e2e2e;
-        color: #f0b6e7;
-    }
+  body {
+    background: #2e2e2e;
+    color: #f0b6e7;
+  }
 }
 
-/* ---------------- Header ---------------- */
-header {
-    padding: 24px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: 300;
-}
-
-/* ---------------- Gallery ---------------- */
+/* ---------- Gallery ---------- */
 .gallery {
-    column-count: 4;
-    column-gap: 10px;
-    padding: 12px;
+  column-count: 4;
+  column-gap: 10px;
+  padding: 12px;
 }
 @media (max-width: 1100px) { .gallery { column-count: 3; } }
 @media (max-width: 700px)  { .gallery { column-count: 2; } }
 @media (max-width: 480px)  { .gallery { column-count: 1; } }
 
 .gallery img {
-    width: 100%;
-    margin-bottom: 10px;
-    cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
-/* ---------------- Lightbox ---------------- */
+/* ---------- Lightbox ---------- */
 .lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 .lightbox img {
-    max-width: 92vw;
-    max-height: 92vh;
+  max-width: 92vw;
+  max-height: 92vh;
 }
 
-/* ---------------- Desktop arrows ---------------- */
+/* ---------- Desktop arrows ---------- */
 .nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 48px;
-    font-weight: 300;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-    opacity: 0.85;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  color: #fff;
+  cursor: pointer;
 }
 #prevBtn { left: 20px; }
 #nextBtn { right: 20px; }
 
-/* Hide desktop arrows on mobile */
 @media (max-width: 768px) {
-    .nav-btn { display: none; }
+  .nav-btn { display: none; }
 }
 
-/* ---------------- Bottom UI cluster ---------------- */
-.bottom-ui {
-    position: absolute;
-    bottom: 64px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 18px;
-    pointer-events: none;
+/* ---------- Info panel ---------- */
+.info-panel {
+  position: absolute;
+  right: 24px;
+  bottom: 96px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 16px;
+  font-size: 14px;
+  display: none;
+  max-width: 260px;
 }
 
-.counter {
-    font-size: 14px;
-    font-weight: 300;
-    color: #fff;
-    pointer-events: auto;
+/* ---------- Desktop bottom UI ---------- */
+.desktop-ui {
+  position: absolute;
+  bottom: 64px;
+  right: 24px;
+  display: flex;
+  gap: 12px;
 }
-
-.info-btn {
-    font-size: 13px;
-    font-weight: 300;
-    letter-spacing: 0.08em;
-    background: rgba(0,0,0,0.65);
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-/* ---------------- Mobile bottom nav ---------------- */
-.mobile-nav {
-    display: none;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 52px;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(6px);
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-}
-
-.mobile-nav button {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 28px;
-    font-weight: 300;
-    cursor: pointer;
+.desktop-ui button,
+.desktop-ui span {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
-    .mobile-nav { display: flex; }
+  .desktop-ui { display: none; }
 }
 
-/* ---------------- Footer ---------------- */
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 13px;
-    opacity: 0.7;
+/* ---------- Mobile bottom bar ---------- */
+.mobile-bar {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.mobile-bar button,
+.mobile-bar span {
+  color: #fff;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-bar { display: flex; }
 }
 </style>
 </head>
 
 <body>
 
-<header>canoncanon.cc</header>
-
 <div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox">
-    <img id="lightboxImg" alt="">
+  <img id="lightboxImg">
 
-    <!-- Desktop arrows -->
-    <div id="prevBtn" class="nav-btn">⟨</div>
-    <div id="nextBtn" class="nav-btn">⟩</div>
+  <!-- Desktop arrows -->
+  <div id="prevBtn" class="nav-btn">⟨</div>
+  <div id="nextBtn" class="nav-btn">⟩</div>
 
-    <!-- Bottom UI -->
-    <div class="bottom-ui">
-        <div class="counter" id="counter"></div>
-        <button class="info-btn" id="infoBtn">INFO</button>
-    </div>
+  <!-- Desktop UI -->
+  <div class="desktop-ui">
+    <span id="counterDesktop"></span>
+    <button id="infoBtnDesktop">INFO</button>
+  </div>
 
-    <!-- Mobile arrows -->
-    <div class="mobile-nav">
-        <button id="mobilePrev">⟨</button>
-        <button id="mobileNext">⟩</button>
-    </div>
+  <!-- Info panel -->
+  <div class="info-panel" id="infoPanel"></div>
+
+  <!-- Mobile bar -->
+  <div class="mobile-bar">
+    <button id="mobilePrev">⟨</button>
+    <span id="counterMobile"></span>
+    <button id="infoBtnMobile">INFO</button>
+    <button id="mobileNext">⟩</button>
+  </div>
 </div>
-
-<footer>
-website under construction<br>
-© 2025 — Photos licensed under CC BY-NC-SA 4.0
-</footer>
 
 <script>
 let photos = [];
-let currentIndex = 0;
+let index = 0;
+let infoVisible = false;
 
-/* Load photos */
 fetch("photos/photos.json")
   .then(r => r.json())
-  .then(list => {
-      photos = list;
-      const gallery = document.getElementById("gallery");
+  .then(data => {
+    photos = data;
+    const g = document.getElementById("gallery");
 
-      list.forEach((entry, idx) => {
-          const img = document.createElement("img");
-          img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
-          img.loading = "lazy";
-          img.onerror = () => img.src = "photos/thumbs/" + entry.FileName;
-          img.onclick = () => openLightbox(idx);
-          gallery.appendChild(img);
-      });
+    data.forEach((p, i) => {
+      const img = document.createElement("img");
+      img.src = "photos/thumbs/" + p.FileName.replace(/\.jpg$/i, ".webp");
+      img.onerror = () => img.src = "photos/thumbs/" + p.FileName;
+      img.onclick = () => openLightbox(i);
+      g.appendChild(img);
+    });
   });
 
-function openLightbox(index) {
-    currentIndex = index;
-    document.getElementById("lightboxImg").src =
-        "photos/full/" + photos[index].FileName;
-
-    document.getElementById("counter").textContent =
-        `(${index + 1}/${photos.length})`;
-
-    document.getElementById("lightbox").style.display = "flex";
+function openLightbox(i) {
+  index = i;
+  document.getElementById("lightbox").style.display = "flex";
+  document.getElementById("lightboxImg").src = "photos/full/" + photos[i].FileName;
+  updateUI();
 }
 
-/* Click outside to close */
+function updateUI() {
+  document.getElementById("counterDesktop").textContent = `(${index+1}/${photos.length})`;
+  document.getElementById("counterMobile").textContent  = `(${index+1}/${photos.length})`;
+
+  if (infoVisible) {
+    const p = photos[index];
+    document.getElementById("infoPanel").innerHTML = `
+      <div><strong>Camera</strong>: ${p.Model || "—"}</div>
+      <div><strong>Lens</strong>: ${p.LensModel || "—"}</div>
+      <div><strong>Date</strong>: ${p.DateTimeOriginal || "—"}</div>
+      <div><strong>ISO</strong>: ${p.ISO || "—"}</div>
+      <div><strong>Aperture</strong>: f/${p.Aperture || "—"}</div>
+      <div><strong>Shutter</strong>: ${p.ShutterSpeed || "—"}</div>
+      <div><strong>Film</strong>: ${p.Film || "—"}</div>
+    `;
+    document.getElementById("infoPanel").style.display = "block";
+  }
+}
+
+function toggleInfo() {
+  infoVisible = !infoVisible;
+  document.getElementById("infoPanel").style.display = infoVisible ? "block" : "none";
+  updateUI();
+}
+
+infoBtnDesktop.onclick = toggleInfo;
+infoBtnMobile.onclick = toggleInfo;
+
+prevBtn.onclick = () => index > 0 && openLightbox(index - 1);
+nextBtn.onclick = () => index < photos.length - 1 && openLightbox(index + 1);
+mobilePrev.onclick = prevBtn.onclick;
+mobileNext.onclick = nextBtn.onclick;
+
 document.getElementById("lightbox").onclick = e => {
-    if (e.target.id === "lightbox") {
-        document.getElementById("lightbox").style.display = "none";
-    }
+  if (e.target.id === "lightbox") {
+    document.getElementById("lightbox").style.display = "none";
+    infoVisible = false;
+    document.getElementById("infoPanel").style.display = "none";
+  }
 };
 
-/* Desktop arrows */
-prevBtn.onclick = e => {
-    e.stopPropagation();
-    if (currentIndex > 0) openLightbox(currentIndex - 1);
-};
-nextBtn.onclick = e => {
-    e.stopPropagation();
-    if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
-};
-
-/* Mobile arrows */
-mobilePrev.onclick = e => {
-    e.stopPropagation();
-    if (currentIndex > 0) openLightbox(currentIndex - 1);
-};
-mobileNext.onclick = e => {
-    e.stopPropagation();
-    if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
-};
-
-/* Keyboard */
 document.addEventListener("keydown", e => {
-    if (lightbox.style.display !== "flex") return;
-
-    if (e.key === "ArrowRight" && currentIndex < photos.length - 1)
-        openLightbox(currentIndex + 1);
-
-    if (e.key === "ArrowLeft" && currentIndex > 0)
-        openLightbox(currentIndex - 1);
-
-    if (e.key === "Escape")
-        lightbox.style.display = "none";
+  if (lightbox.style.display !== "flex") return;
+  if (e.key === "ArrowRight" && index < photos.length - 1) openLightbox(index + 1);
+  if (e.key === "ArrowLeft" && index > 0) openLightbox(index - 1);
+  if (e.key === "Escape") lightbox.style.display = "none";
 });
 </script>
 
