@@ -1,101 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>canoncanon.cc</title>
+<title>canon²</title>
 
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-/* ================= Fonts ================= */
-
+/* ------------------------------------------------------- */
+/* Fonts — Myriad everywhere                               */
+/* ------------------------------------------------------- */
 @font-face {
     font-family: 'MyriadPro';
     src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Light.woff') format('woff');
     font-weight: 300;
-    font-style: normal;
-    font-display: swap;
 }
-
 @font-face {
     font-family: 'MyriadPro';
     src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
     font-weight: 400;
-    font-style: normal;
-    font-display: swap;
 }
 
-/* ================= Theme ================= */
-
-body[data-theme="dark"] {
-    background: #2e2e2e;
-    color: #f0b6e7;
-}
-
-body[data-theme="light"] {
-    background: #f5f5f5;
-    color: #2a2a2a;
-}
-
-/* ================= Base ================= */
-
+/* ------------------------------------------------------- */
+/* Base (system theme only)                                */
+/* ------------------------------------------------------- */
 body {
     margin: 0;
-    font-family: 'MyriadPro';
+    font-family: 'MyriadPro', sans-serif;
     font-weight: 400;
-    -webkit-font-smoothing: antialiased;
+    background: #f3f3f3;
+    color: #f78c20;
 }
 
-/* ================= Header ================= */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #2e2e2e;
+        color: #f0b6e7;
+    }
+}
 
+/* ------------------------------------------------------- */
+/* Header                                                  */
+/* ------------------------------------------------------- */
 header {
-    padding: 28px;
+    padding: 24px;
     text-align: center;
     font-size: 28px;
-    letter-spacing: -0.015em;
-    position: relative;
+    font-weight: 300;
 }
 
-.theme-toggle {
-    position: absolute;
-    right: 24px;
-    top: 24px;
-    background: none;
-    border: 1px solid currentColor;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    opacity: 0.8;
-}
-
-/* ================= Gallery ================= */
-
-.gallery-wrap {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 32px 40px;
-}
-
+/* ------------------------------------------------------- */
+/* Gallery                                                 */
+/* ------------------------------------------------------- */
 .gallery {
     column-count: 4;
-    column-gap: 8px;
+    column-gap: 10px;
+    padding: 12px;
 }
 
-@media (max-width: 1200px) { .gallery { column-count: 3; } }
-@media (max-width: 800px)  { .gallery { column-count: 2; } }
-@media (max-width: 500px)  { .gallery { column-count: 1; } }
+@media (max-width: 1100px) { .gallery { column-count: 3; } }
+@media (max-width: 700px)  { .gallery { column-count: 2; } }
+@media (max-width: 480px)  { .gallery { column-count: 1; } }
 
 .gallery img {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 
-/* ================= Lightbox ================= */
-
+/* ------------------------------------------------------- */
+/* Lightbox                                                */
+/* ------------------------------------------------------- */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -103,7 +82,7 @@ header {
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 999;
 }
 
 .lightbox img {
@@ -111,76 +90,33 @@ header {
     max-height: 92vh;
 }
 
-/* ================= UI ================= */
-
+/* ------------------------------------------------------- */
+/* Counter                                                 */
+/* ------------------------------------------------------- */
 .counter {
     position: absolute;
-    bottom: 18px;
+    bottom: 64px;
     left: 18px;
+    font-weight: 300;
     font-size: 14px;
     color: #fff;
 }
 
-.info-btn {
-    position: absolute;
-    bottom: 18px;
-    right: 18px;
-    background: rgba(0,0,0,0.75);
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-}
-
-/* ================= Metadata ================= */
-
-.lightbox-meta {
-    position: absolute;
-    bottom: 56px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(620px, calc(100vw - 40px));
-    background: rgba(0,0,0,0.78);
-    padding: 24px 28px;
-    display: none;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #fff;
-}
-
-.meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 40px;
-    row-gap: 6px;
-}
-
-.meta-label {
-    opacity: 0.6;
-}
-
-.meta-value {
-    text-align: right;
-}
-
-.lightbox.show-meta .lightbox-meta {
-    display: block;
-}
-
-/* ================= Mobile Arrows ================= */
-
+/* ------------------------------------------------------- */
+/* Mobile bottom navigation bar                            */
+/* ------------------------------------------------------- */
 .mobile-nav {
     display: none;
     position: absolute;
-    bottom: 92px;
-    left: 50%;
-    transform: translateX(-50%);
-    gap: 48px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
     background: rgba(0,0,0,0.55);
     backdrop-filter: blur(6px);
-    padding: 10px 26px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
 }
 
 .mobile-nav button {
@@ -188,6 +124,7 @@ header {
     border: none;
     color: #fff;
     font-size: 28px;
+    font-weight: 300;
     cursor: pointer;
 }
 
@@ -195,164 +132,128 @@ header {
     .mobile-nav { display: flex; }
 }
 
-/* ================= Footer ================= */
+/* ------------------------------------------------------- */
+/* Desktop arrows (unchanged)                              */
+/* ------------------------------------------------------- */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 48px;
+    font-weight: 300;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0.85;
+}
 
+#prevBtn { left: 20px; }
+#nextBtn { right: 20px; }
+
+.nav-btn:hover { opacity: 1; }
+
+/* ------------------------------------------------------- */
+/* Footer                                                  */
+/* ------------------------------------------------------- */
 footer {
-    padding: 24px;
     text-align: center;
+    padding: 20px;
     font-size: 13px;
     opacity: 0.7;
 }
 </style>
 </head>
 
-<body data-theme="dark">
+<body>
 
-<header>
-    canoncanon.cc
-    <button class="theme-toggle" id="themeToggle">LIGHT</button>
-</header>
+<header>canoncanon.cc</header>
 
-<div class="gallery-wrap">
-    <div class="gallery" id="gallery"></div>
-</div>
+<div class="gallery" id="gallery"></div>
 
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" alt="">
+
     <div class="counter" id="counter"></div>
-    <button class="info-btn" id="infoBtn">INFO</button>
 
+    <!-- Desktop arrows -->
+    <div id="prevBtn" class="nav-btn">⟨</div>
+    <div id="nextBtn" class="nav-btn">⟩</div>
+
+    <!-- Mobile bottom bar -->
     <div class="mobile-nav">
-        <button id="prevBtn">&lt;</button>
-        <button id="nextBtn">&gt;</button>
+        <button id="mobilePrev">⟨</button>
+        <button id="mobileNext">⟩</button>
     </div>
-
-    <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
 
 <footer>
+website under construction<br>
 © 2025 — Photos licensed under CC BY-NC-SA 4.0
 </footer>
 
 <script>
 let photos = [];
 let currentIndex = 0;
-let infoOpen = false;
 
-/* ================= Theme ================= */
-
-const themeToggle = document.getElementById("themeToggle");
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme) document.body.dataset.theme = savedTheme;
-
-themeToggle.textContent =
-    document.body.dataset.theme === "dark" ? "LIGHT" : "DARK";
-
-themeToggle.onclick = () => {
-    const newTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
-    document.body.dataset.theme = newTheme;
-    localStorage.setItem("theme", newTheme);
-    themeToggle.textContent = newTheme === "dark" ? "LIGHT" : "DARK";
-};
-
-/* ================= Metadata Field Map ================= */
-
-const META_FIELDS = [
-    ["Film", "Film"],
-    ["Model", "Camera"],
-    ["Camera", "Camera"],
-    ["LensModel", "Lens"],
-    ["Lens", "Lens"],
-    ["FocalLength", "Focal"],
-    ["Aperture", "Aperture"],
-    ["ShutterSpeed", "Shutter"],
-    ["ISO", "ISO"],
-    ["DateTimeOriginal", "Date"],
-    ["Date", "Date"]
-];
-
-/* ================= Gallery ================= */
-
+/* Load photos */
 fetch("photos/photos.json")
-    .then(r => r.json())
-    .then(data => {
-        photos = data;
-        const gallery = document.getElementById("gallery");
+  .then(r => r.json())
+  .then(list => {
+      photos = list;
+      const gallery = document.getElementById("gallery");
 
-        data.forEach((entry, idx) => {
-            const img = document.createElement("img");
-            img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
-            img.loading = "lazy";
-
-            img.onerror = () => {
-                img.src = "photos/thumbs/" + entry.FileName;
-            };
-
-            img.onclick = () => openLightbox(idx);
-            gallery.appendChild(img);
-        });
-    });
-
-function renderMeta(entry) {
-    const rows = [];
-
-    META_FIELDS.forEach(([key, label]) => {
-        if (!entry[key]) return;
-
-        let value = entry[key];
-
-        if (key === "Aperture") value = "f/" + value;
-        if (key === "ISO") value = "ISO " + value;
-        if (key === "DateTimeOriginal")
-            value = value.split(" ")[0].replace(/:/g, "-");
-
-        rows.push(`
-            <div class="meta-label">${label}</div>
-            <div class="meta-value">${value}</div>
-        `);
-    });
-
-    document.getElementById("lightboxMeta").innerHTML =
-        `<div class="meta-grid">${rows.join("")}</div>`;
-}
+      list.forEach((entry, idx) => {
+          const img = document.createElement("img");
+          img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
+          img.loading = "lazy";
+          img.onerror = () => img.src = "photos/thumbs/" + entry.FileName;
+          img.onclick = () => openLightbox(idx);
+          gallery.appendChild(img);
+      });
+  });
 
 function openLightbox(index) {
     currentIndex = index;
-    const entry = photos[index];
-
     document.getElementById("lightboxImg").src =
-        "photos/full/" + entry.FileName;
+        "photos/full/" + photos[index].FileName;
 
     document.getElementById("counter").textContent =
         `(${index + 1}/${photos.length})`;
 
-    renderMeta(entry);
-
-    const lb = document.getElementById("lightbox");
-    lb.style.display = "flex";
-    lb.classList.toggle("show-meta", infoOpen);
+    document.getElementById("lightbox").style.display = "flex";
 }
 
-/* ================= Controls ================= */
-
-document.getElementById("infoBtn").onclick = e => {
-    e.stopPropagation();
-    infoOpen = !infoOpen;
-    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
+/* Click outside to close */
+document.getElementById("lightbox").onclick = e => {
+    if (e.target.id === "lightbox") {
+        document.getElementById("lightbox").style.display = "none";
+    }
 };
 
+/* Desktop arrows */
 document.getElementById("prevBtn").onclick = e => {
     e.stopPropagation();
     if (currentIndex > 0) openLightbox(currentIndex - 1);
 };
-
 document.getElementById("nextBtn").onclick = e => {
     e.stopPropagation();
     if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
 };
 
+/* Mobile arrows */
+document.getElementById("mobilePrev").onclick = e => {
+    e.stopPropagation();
+    if (currentIndex > 0) openLightbox(currentIndex - 1);
+};
+document.getElementById("mobileNext").onclick = e => {
+    e.stopPropagation();
+    if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
+};
+
+/* Keyboard */
 document.addEventListener("keydown", e => {
-    if (document.getElementById("lightbox").style.display !== "flex") return;
+    const lb = document.getElementById("lightbox");
+    if (lb.style.display !== "flex") return;
 
     if (e.key === "ArrowRight" && currentIndex < photos.length - 1)
         openLightbox(currentIndex + 1);
@@ -361,7 +262,7 @@ document.addEventListener("keydown", e => {
         openLightbox(currentIndex - 1);
 
     if (e.key === "Escape")
-        document.getElementById("lightbox").style.display = "none";
+        lb.style.display = "none";
 });
 </script>
 
