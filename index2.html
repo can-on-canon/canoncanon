@@ -9,9 +9,7 @@
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-/* ------------------------------------------------------- */
-/* Fonts — Myriad everywhere                               */
-/* ------------------------------------------------------- */
+/* ---------------- Fonts (Myriad everywhere) ---------------- */
 @font-face {
     font-family: 'MyriadPro';
     src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
@@ -25,9 +23,7 @@
     font-weight: 400;
 }
 
-/* ------------------------------------------------------- */
-/* Base (system theme only)                                */
-/* ------------------------------------------------------- */
+/* ---------------- Base / system theme ---------------- */
 body {
     margin: 0;
     font-family: 'MyriadPro', sans-serif;
@@ -35,7 +31,6 @@ body {
     background: #f3f3f3;
     color: #f78c20;
 }
-
 @media (prefers-color-scheme: dark) {
     body {
         background: #2e2e2e;
@@ -43,9 +38,7 @@ body {
     }
 }
 
-/* ------------------------------------------------------- */
-/* Header                                                  */
-/* ------------------------------------------------------- */
+/* ---------------- Header ---------------- */
 header {
     padding: 24px;
     text-align: center;
@@ -53,15 +46,12 @@ header {
     font-weight: 300;
 }
 
-/* ------------------------------------------------------- */
-/* Gallery                                                 */
-/* ------------------------------------------------------- */
+/* ---------------- Gallery ---------------- */
 .gallery {
     column-count: 4;
     column-gap: 10px;
     padding: 12px;
 }
-
 @media (max-width: 1100px) { .gallery { column-count: 3; } }
 @media (max-width: 700px)  { .gallery { column-count: 2; } }
 @media (max-width: 480px)  { .gallery { column-count: 1; } }
@@ -72,9 +62,7 @@ header {
     cursor: pointer;
 }
 
-/* ------------------------------------------------------- */
-/* Lightbox                                                */
-/* ------------------------------------------------------- */
+/* ---------------- Lightbox ---------------- */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -84,27 +72,64 @@ header {
     justify-content: center;
     z-index: 999;
 }
-
 .lightbox img {
     max-width: 92vw;
     max-height: 92vh;
 }
 
-/* ------------------------------------------------------- */
-/* Counter                                                 */
-/* ------------------------------------------------------- */
-.counter {
+/* ---------------- Desktop arrows ---------------- */
+.nav-btn {
     position: absolute;
-    bottom: 64px;
-    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 48px;
     font-weight: 300;
-    font-size: 14px;
     color: #fff;
+    cursor: pointer;
+    user-select: none;
+    opacity: 0.85;
+}
+#prevBtn { left: 20px; }
+#nextBtn { right: 20px; }
+
+/* Hide desktop arrows on mobile */
+@media (max-width: 768px) {
+    .nav-btn { display: none; }
 }
 
-/* ------------------------------------------------------- */
-/* Mobile bottom navigation bar                            */
-/* ------------------------------------------------------- */
+/* ---------------- Bottom UI cluster ---------------- */
+.bottom-ui {
+    position: absolute;
+    bottom: 64px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 18px;
+    pointer-events: none;
+}
+
+.counter {
+    font-size: 14px;
+    font-weight: 300;
+    color: #fff;
+    pointer-events: auto;
+}
+
+.info-btn {
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* ---------------- Mobile bottom nav ---------------- */
 .mobile-nav {
     display: none;
     position: absolute;
@@ -132,29 +157,7 @@ header {
     .mobile-nav { display: flex; }
 }
 
-/* ------------------------------------------------------- */
-/* Desktop arrows (unchanged)                              */
-/* ------------------------------------------------------- */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 48px;
-    font-weight: 300;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-    opacity: 0.85;
-}
-
-#prevBtn { left: 20px; }
-#nextBtn { right: 20px; }
-
-.nav-btn:hover { opacity: 1; }
-
-/* ------------------------------------------------------- */
-/* Footer                                                  */
-/* ------------------------------------------------------- */
+/* ---------------- Footer ---------------- */
 footer {
     text-align: center;
     padding: 20px;
@@ -173,13 +176,17 @@ footer {
 <div class="lightbox" id="lightbox">
     <img id="lightboxImg" alt="">
 
-    <div class="counter" id="counter"></div>
-
     <!-- Desktop arrows -->
     <div id="prevBtn" class="nav-btn">⟨</div>
     <div id="nextBtn" class="nav-btn">⟩</div>
 
-    <!-- Mobile bottom bar -->
+    <!-- Bottom UI -->
+    <div class="bottom-ui">
+        <div class="counter" id="counter"></div>
+        <button class="info-btn" id="infoBtn">INFO</button>
+    </div>
+
+    <!-- Mobile arrows -->
     <div class="mobile-nav">
         <button id="mobilePrev">⟨</button>
         <button id="mobileNext">⟩</button>
@@ -231,29 +238,28 @@ document.getElementById("lightbox").onclick = e => {
 };
 
 /* Desktop arrows */
-document.getElementById("prevBtn").onclick = e => {
+prevBtn.onclick = e => {
     e.stopPropagation();
     if (currentIndex > 0) openLightbox(currentIndex - 1);
 };
-document.getElementById("nextBtn").onclick = e => {
+nextBtn.onclick = e => {
     e.stopPropagation();
     if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
 };
 
 /* Mobile arrows */
-document.getElementById("mobilePrev").onclick = e => {
+mobilePrev.onclick = e => {
     e.stopPropagation();
     if (currentIndex > 0) openLightbox(currentIndex - 1);
 };
-document.getElementById("mobileNext").onclick = e => {
+mobileNext.onclick = e => {
     e.stopPropagation();
     if (currentIndex < photos.length - 1) openLightbox(currentIndex + 1);
 };
 
 /* Keyboard */
 document.addEventListener("keydown", e => {
-    const lb = document.getElementById("lightbox");
-    if (lb.style.display !== "flex") return;
+    if (lightbox.style.display !== "flex") return;
 
     if (e.key === "ArrowRight" && currentIndex < photos.length - 1)
         openLightbox(currentIndex + 1);
@@ -262,7 +268,7 @@ document.addEventListener("keydown", e => {
         openLightbox(currentIndex - 1);
 
     if (e.key === "Escape")
-        lb.style.display = "none";
+        lightbox.style.display = "none";
 });
 </script>
 
