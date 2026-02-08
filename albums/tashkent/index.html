@@ -2,42 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Tashkent, January 2026</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>canon²</title>
+
+<link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
+/* Fonts */
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'MyriadPro';
+    src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
+         url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+    
+/*Base layout*/
+    
 body {
     margin: 0;
-    background: #0e0e11;
-    color: #f78c20;
-    font-family: 'MSSans', system-ui, sans-serif;
+    padding: 0;
+    font-family: 'MyriadPro';
+    font-weight: 400;
+    background: #2e2e2e;
+    color: #f0b6e7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 header {
-    padding: 20px;
-    text-align: right;
-    font-size: 22px;
+    padding: 28px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+}
+
+/*Masonry gallery*/
+
+.gallery-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 40px;
 }
 
 .gallery {
-    padding: 20px;
+    column-count: 4;
+    column-gap: 8px;
 }
 
+@media (max-width: 1200px) { .gallery { column-count: 3; } }
+@media (max-width: 800px)  { .gallery { column-count: 2; } }
+@media (max-width: 500px)  { .gallery { column-count: 1; } }
+
 .gallery img {
-    height: 110px;
-    margin: 4px;
+    width: 100%;
+    margin-bottom: 8px;
     cursor: pointer;
 }
 
-footer {
-    text-align: right;
-    padding: 20px;
-    font-size: 13px;
-    opacity: .8;
-}
-
-/* LIGHTBOX */
-
+/*Lightbox*/
 .lightbox {
     position: fixed;
     inset: 0;
@@ -45,7 +79,7 @@ footer {
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .lightbox img {
@@ -53,26 +87,75 @@ footer {
     max-height: 92vh;
 }
 
-.nav-btn {
+/* Bottom UI */
+.counter {
     position: absolute;
-    top: 50%;
-    font-size: 40px;
-    cursor: pointer;
-    user-select: none;
+    bottom: 18px;
+    left: 18px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #ffffff;
+    opacity: 0.9;
 }
 
-#prevBtn { left: 20px; }
-#nextBtn { right: 20px; }
+.info-btn {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    background: rgba(0,0,0,0.75);
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+/* Metadata panel */
+.lightbox-meta {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(520px, calc(100vw - 40px));
+    background: rgba(0,0,0,0.78);
+    padding: 20px 22px;
+    display: none;
+
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #ffffff;
+}
 
 .meta-grid {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0,0,0,.6);
-    padding: 10px;
-    font-size: 13px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    row-gap: 6px;
 }
-.meta-label { opacity:.7; }
+
+.meta-label {
+    opacity: 0.65;
+}
+
+.meta-value {
+    text-align: right;
+}
+
+.lightbox.show-meta .lightbox-meta {
+    display: block;
+}
+
+/* Footer */
+footer {
+    padding: 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 300;
+    opacity: 0.7;
+}
 </style>
 </head>
 
@@ -80,13 +163,15 @@ footer {
 
 <header>Tashkent, January 2026</header>
 
-<div class="gallery" id="gallery"></div>
+<div class="gallery-wrap">
+    <div class="gallery" id="gallery"></div>
+</div>
 
 <div class="lightbox" id="lightbox">
-  <img id="lightboxImg">
-  <div id="prevBtn" class="nav-btn">‹</div>
-  <div id="nextBtn" class="nav-btn">›</div>
-  <div id="lightboxMeta"></div>
+    <img id="lightboxImg" alt="">
+    <div class="counter" id="counter"></div>
+    <button class="info-btn" id="infoBtn">ⓘ INFO</button>
+    <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
 
 <footer>
@@ -95,8 +180,8 @@ footer {
 
 <script>
 let photos = [];
-let albumMeta = {};
 let currentIndex = 0;
+let infoOpen = false;
 
 fetch("/photos/tashkent.json")
   .then(r => r.json())
@@ -109,12 +194,13 @@ fetch("/photos/tashkent.json")
       data.photos.forEach((entry, idx) => {
           const img = document.createElement("img");
 
-          const webpName =
-              entry.FileName.replace(/\.(jpg|jpeg)$/i, ".webp");
+          // WebP thumb derived from JPG name
+          const webpName = entry.FileName.replace(/\.(jpg|jpeg)$/i, ".webp");
 
           img.src = "/photos/thumbs/" + webpName;
           img.loading = "lazy";
 
+          // Fallback to JPG thumb if webp missing
           img.onerror = () => {
               img.onerror = null;
               img.src = "/photos/thumbs/" + entry.FileName;
@@ -125,73 +211,68 @@ fetch("/photos/tashkent.json")
       });
   });
 
+function renderMeta(entry) {
+    const m = albumMeta;
+
+    document.getElementById("lightboxMeta").innerHTML = `
+        <div class="meta-grid">
+            <div class="meta-label">Camera</div><div class="meta-value">${m.Model || ""}</div>
+            <div class="meta-label">Lens</div><div class="meta-value">${m.LensModel || ""}</div>
+            <div class="meta-label">Focal</div><div class="meta-value">${m.FocalLength || ""}</div>
+            <div class="meta-label">Film</div><div class="meta-value">${m.Film || ""}</div>
+            <div class="meta-label">ISO</div><div class="meta-value">${m.ISO ? "ISO " + m.ISO : ""}</div>
+        </div>
+    `;
+}
+
 function openLightbox(index) {
     currentIndex = index;
+    const entry = photos[index];
 
     document.getElementById("lightboxImg").src =
         "/photos/full/" + photos[index].FileName;
 
-    renderMeta();
-    document.getElementById("lightbox").style.display = "flex";
+    document.getElementById("counter").textContent =
+        `(${index + 1}/${photos.length})`;
+
+    renderMeta(entry);
+
+    const lb = document.getElementById("lightbox");
+    lb.style.display = "flex";
+    lb.classList.toggle("show-meta", infoOpen);
 }
 
-function renderMeta() {
-    const m = albumMeta;
+/* Close */
+document.getElementById("lightbox").addEventListener("click", e => {
+    if (e.target.id === "lightbox") {
+        e.currentTarget.style.display = "none";
+        infoOpen = false;
+    }
+});
 
-    document.getElementById("lightboxMeta").innerHTML = `
-      <div class="meta-grid">
-        <div class="meta-label">Camera</div>
-        <div>${m.Model || ""}</div>
-
-        <div class="meta-label">Lens</div>
-        <div>${m.LensModel || ""}</div>
-
-        <div class="meta-label">Focal</div>
-        <div>${m.FocalLength || ""}</div>
-
-        <div class="meta-label">ISO</div>
-        <div>${m.ISO ? "ISO " + m.ISO : ""}</div>
-
-        ${m.Film ? `
-        <div class="meta-label">Film</div>
-        <div>${m.Film}</div>` : ""}
-      </div>
-    `;
-}
-
-// Close lightbox
-document.getElementById("lightbox").onclick = (e) => {
-    if (e.target.id === "lightbox")
-        document.getElementById("lightbox").style.display = "none";
-};
-
-// Buttons
-nextBtn.onclick = e => {
+/* INFO toggle */
+document.getElementById("infoBtn").onclick = e => {
     e.stopPropagation();
-    if (currentIndex < photos.length - 1)
-        openLightbox(currentIndex + 1);
+    infoOpen = !infoOpen;
+    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
-prevBtn.onclick = e => {
-    e.stopPropagation();
-    if (currentIndex > 0)
-        openLightbox(currentIndex - 1);
-};
-
-// Keyboard
+/* Keyboard navigation */
 document.addEventListener("keydown", e => {
-    if (lightbox.style.display !== "flex") return;
+    const lb = document.getElementById("lightbox");
+    if (lb.style.display !== "flex") return;
 
-    if (e.key === "ArrowRight")
-        nextBtn.onclick(e);
-
-    if (e.key === "ArrowLeft")
-        prevBtn.onclick(e);
-
-    if (e.key === "Escape")
-        lightbox.style.display = "none";
+    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) {
+        openLightbox(currentIndex + 1);
+    }
+    if (e.key === "ArrowLeft" && currentIndex > 0) {
+        openLightbox(currentIndex - 1);
+    }
+    if (e.key === "Escape") {
+        lb.style.display = "none";
+        infoOpen = false;
+    }
 });
 </script>
-
 </body>
 </html>
