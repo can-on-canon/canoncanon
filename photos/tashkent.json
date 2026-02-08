@@ -1,0 +1,32 @@
+{
+  "albumMeta": {
+    "Model": "Canon EOS 30",
+    "LensModel": "EF 28mm f/2.8",
+    "FocalLength": "28mm",
+    "ISO": "200",
+    "Film": "Kodak Gold 200",
+  },
+
+  "photos": [
+    { "FileName": "IMG01.jpg" },
+    { "FileName": "IMG02.jpg" },
+    { "FileName": "IMG03.jpg" },
+    { "FileName": "IMG04.jpg" },
+    { "FileName": "IMG05.jpg" },
+    { "FileName": "IMG06.jpg" },
+    { "FileName": "IMG07.jpg" },
+    { "FileName": "IMG08.jpg" },
+    { "FileName": "IMG09.jpg" },
+    { "FileName": "IMG10.jpg" },
+    { "FileName": "IMG11.jpg" },
+    { "FileName": "IMG12.jpg" },
+    { "FileName": "IMG13.jpg" },
+    { "FileName": "IMG14.jpg" },
+    { "FileName": "IMG15.jpg" },
+    { "FileName": "IMG16.jpg" },
+    { "FileName": "IMG17.jpg" },
+    { "FileName": "IMG18.jpg" },
+    { "FileName": "IMG19.jpg" },
+    { "FileName": "IMG20.jpg" }
+  ]
+}
