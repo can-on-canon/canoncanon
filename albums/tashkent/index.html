@@ -183,7 +183,7 @@ let photos = [];
 let currentIndex = 0;
 let infoOpen = false;
 
-fetch("photos/tashkent.json")
+fetch("/photos/tashkent.json")
     .then(r => r.json())
     .then(data => {
         photos = data.photos;
