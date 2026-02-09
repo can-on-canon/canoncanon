@@ -22,12 +22,34 @@
     font-weight: 400;
 }
 
-body {
-    margin: 0;
-    font-family: 'MyriadPro';
-    background: #2e2e2e;
-    color: #f0b6e7;
+:root {
+    --bg: #ffffff;
+    --text: #202122;
+    --accent: #f78c20;
 }
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #ffffff;
+        --text: #f78c20;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #2e2e2e;
+        --text: #f0b6e7;
+    }
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+a { color: var(--text); }
+.divider { background: var(--text); }
 
 header {
     padding: 28px;
