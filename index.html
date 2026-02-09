@@ -72,12 +72,11 @@ header {
 }
 
 
-/* full‑width separators */
 .divider {
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    height: 1px;              /* halfway thickness */
-    background: #f0b6e7;
+    height: 1px;
+    background: var(--text);   /* follows theme */
     opacity: .7;
 }
 
@@ -125,7 +124,7 @@ header {
 }
 
 .nav-links a {
-    color: #f0b6e7;
+    color: var(--text);
     text-decoration: none;
     margin: 0 8px;
     font-size: 14px;
