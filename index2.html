@@ -35,11 +35,11 @@ header {
     font-size: 28px;
 }
 
-/* full-width separators */
+/* full‑width separators */
 .divider {
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    height: 3px;              /* thicker as requested */
+    height: 1.5px;              /* reduced thickness */
     background: #f0b6e7;
     opacity: .7;
 }
@@ -65,15 +65,15 @@ header {
     .grid { grid-template-columns: 1fr; }
 }
 
-/* make images ~75% smaller on long side */
+/* make images 75% of original size */
 .grid a {
     display: flex;
     justify-content: center;
 }
 
 .grid a img {
-    width: 25%;               /* 75% reduction */
-    max-width: 25%;
+    width: 75%;
+    max-width: 75%;
     display: block;
     transition: opacity .15s;
 }
