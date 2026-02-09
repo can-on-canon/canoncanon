@@ -8,14 +8,11 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
-/* Fonts */
 @font-face {
     font-family: 'MyriadPro';
     src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Light.woff') format('woff');
     font-weight: 300;
-    font-style: normal;
-    font-display: swap;
 }
 
 @font-face {
@@ -23,22 +20,43 @@
     src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
     font-weight: 400;
-    font-style: normal;
-    font-display: swap;
 }
-    
-/*Base layout*/
-    
+
+/* THEME VARIABLES */
+:root {
+    --bg: #ffffff;
+    --text: #202122;
+    --accent: #f78c20;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #ffffff;
+        --text: #f78c20;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #2e2e2e;
+        --text: #f0b6e7;
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: 'MyriadPro';
     font-weight: 400;
-    background: #2e2e2e;
-    color: #f0b6e7;
+    background: var(--bg);
+    color: var(--text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+a { color: var(--text); }
 
 header {
     padding: 28px;
@@ -48,12 +66,43 @@ header {
     letter-spacing: -0.015em;
 }
 
-/*Masonry gallery*/
+.subtitle {
+    font-size: 18px;
+    margin-top: 6px;
+    opacity: .9;
+}
 
+.divider {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    height: 1px;
+    background: var(--text);
+    opacity: .7;
+}
+
+/* NAV LINKS (same as home) */
+.nav-links {
+    margin: 18px 0;
+    text-align: center;
+}
+
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    margin: 0 8px;
+    font-size: 14px;
+    opacity: .85;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* GALLERY */
 .gallery-wrap {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 32px 40px;
+    padding: 24px 32px 40px;
 }
 
 .gallery {
@@ -71,7 +120,7 @@ header {
     cursor: pointer;
 }
 
-/*Lightbox*/
+/* LIGHTBOX */
 .lightbox {
     position: fixed;
     inset: 0;
@@ -87,7 +136,6 @@ header {
     max-height: 92vh;
 }
 
-/* Bottom UI */
 .counter {
     position: absolute;
     bottom: 18px;
@@ -112,7 +160,6 @@ header {
     cursor: pointer;
 }
 
-/* Metadata panel */
 .lightbox-meta {
     position: absolute;
     bottom: 56px;
@@ -122,7 +169,6 @@ header {
     background: rgba(0,0,0,0.78);
     padding: 20px 22px;
     display: none;
-
     font-size: 15px;
     font-weight: 300;
     line-height: 1.6;
@@ -136,19 +182,13 @@ header {
     row-gap: 6px;
 }
 
-.meta-label {
-    opacity: 0.65;
-}
-
-.meta-value {
-    text-align: right;
-}
+.meta-label { opacity: 0.65; }
+.meta-value { text-align: right; }
 
 .lightbox.show-meta .lightbox-meta {
     display: block;
 }
 
-/* Footer */
 footer {
     padding: 24px;
     text-align: center;
@@ -161,7 +201,19 @@ footer {
 
 <body>
 
-<header>Tashkent, January 2026</header>
+<header>
+    Tashkent, January 2026
+</header>
+
+<div class="divider"></div>
+
+<div class="nav-links">
+    <a href="/">home</a> •
+    <a href="/about">about</a> •
+    <a href="https://instagram.com/can.on.canon">instagram</a>
+</div>
+
+<div class="divider"></div>
 
 <div class="gallery-wrap">
     <div class="gallery" id="gallery"></div>
@@ -174,6 +226,8 @@ footer {
     <div class="lightbox-meta" id="lightboxMeta"></div>
 </div>
 
+<div class="divider"></div>
+
 <footer>
 © 2025 — Photos licensed under CC BY-NC-SA 4.0
 </footer>
@@ -182,25 +236,22 @@ footer {
 let photos = [];
 let currentIndex = 0;
 let infoOpen = false;
+let albumMeta = {};
 
 fetch("/photos/tashkent.json")
   .then(r => r.json())
   .then(data => {
       photos = data.photos;
       albumMeta = data.albumMeta || {};
-
       const gallery = document.getElementById("gallery");
 
       data.photos.forEach((entry, idx) => {
           const img = document.createElement("img");
-
-          // WebP thumb derived from JPG name
           const webpName = entry.FileName.replace(/\.(jpg|jpeg)$/i, ".webp");
 
           img.src = "/photos/thumbs/" + webpName;
           img.loading = "lazy";
 
-          // Fallback to JPG thumb if webp missing
           img.onerror = () => {
               img.onerror = null;
               img.src = "/photos/thumbs/" + entry.FileName;
@@ -213,7 +264,6 @@ fetch("/photos/tashkent.json")
 
 function renderMeta(entry) {
     const m = albumMeta;
-
     document.getElementById("lightboxMeta").innerHTML = `
         <div class="meta-grid">
             <div class="meta-label">Camera</div><div class="meta-value">${m.Model || ""}</div>
@@ -230,7 +280,7 @@ function openLightbox(index) {
     const entry = photos[index];
 
     document.getElementById("lightboxImg").src =
-        "/photos/full/" + photos[index].FileName;
+        "/photos/full/" + entry.FileName;
 
     document.getElementById("counter").textContent =
         `(${index + 1}/${photos.length})`;
@@ -242,7 +292,6 @@ function openLightbox(index) {
     lb.classList.toggle("show-meta", infoOpen);
 }
 
-/* Close */
 document.getElementById("lightbox").addEventListener("click", e => {
     if (e.target.id === "lightbox") {
         e.currentTarget.style.display = "none";
@@ -250,14 +299,12 @@ document.getElementById("lightbox").addEventListener("click", e => {
     }
 });
 
-/* INFO toggle */
 document.getElementById("infoBtn").onclick = e => {
     e.stopPropagation();
     infoOpen = !infoOpen;
     document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
 };
 
-/* Keyboard navigation */
 document.addEventListener("keydown", e => {
     const lb = document.getElementById("lightbox");
     if (lb.style.display !== "flex") return;
@@ -274,5 +321,6 @@ document.addEventListener("keydown", e => {
     }
 });
 </script>
+
 </body>
 </html>
