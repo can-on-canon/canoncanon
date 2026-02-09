@@ -8,14 +8,11 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 
 <style>
-/* Fonts */
 @font-face {
     font-family: 'MyriadPro';
     src: url('/fonts/converted/MyriadPro-Light.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Light.woff') format('woff');
     font-weight: 300;
-    font-style: normal;
-    font-display: swap;
 }
 
 @font-face {
@@ -23,252 +20,108 @@
     src: url('/fonts/converted/MyriadPro-Regular.woff2') format('woff2'),
          url('/fonts/converted/MyriadPro-Regular.woff') format('woff');
     font-weight: 400;
-    font-style: normal;
-    font-display: swap;
 }
-    
-/*Base layout*/
-    
+
 body {
-  margin: 0;
-  font-family: 'MyriadPro', sans-serif;
-  background: #f3f3f3;
-  color: #f78c20;
-}
-@media (prefers-color-scheme: dark) {
-  body {
+    margin: 0;
+    font-family: 'MyriadPro';
     background: #2e2e2e;
     color: #f0b6e7;
-  }
 }
 
 header {
     padding: 28px;
     text-align: center;
     font-size: 28px;
-    font-weight: 400;
-    letter-spacing: -0.015em;
 }
 
-/*Masonry gallery*/
-
-.gallery-wrap {
-    max-width: 1400px;
+.grid-wrap {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 32px 40px;
+    padding: 0 24px 24px;
 }
 
-.gallery {
-    column-count: 4;
-    column-gap: 8px;
-}
-
-@media (max-width: 1200px) { .gallery { column-count: 3; } }
-@media (max-width: 800px)  { .gallery { column-count: 2; } }
-@media (max-width: 500px)  { .gallery { column-count: 1; } }
-
-.gallery img {
-    width: 100%;
-    margin-bottom: 8px;
-    cursor: pointer;
-}
-
-/*Lightbox*/
-.lightbox {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.lightbox img {
-    max-width: 92vw;
-    max-height: 92vh;
-}
-
-/* Bottom UI */
-.counter {
-    position: absolute;
-    bottom: 18px;
-    left: 18px;
-    font-size: 14px;
-    font-weight: 300;
-    color: #ffffff;
-    opacity: 0.9;
-}
-
-.info-btn {
-    position: absolute;
-    bottom: 18px;
-    right: 18px;
-    background: rgba(0,0,0,0.75);
-    color: #ffffff;
-    border: none;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-}
-
-/* Metadata panel */
-.lightbox-meta {
-    position: absolute;
-    bottom: 56px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(520px, calc(100vw - 40px));
-    background: rgba(0,0,0,0.78);
-    padding: 20px 22px;
-    display: none;
-
-    font-size: 15px;
-    font-weight: 300;
-    line-height: 1.6;
-    color: #ffffff;
-}
-
-.meta-grid {
+.grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 28px;
-    row-gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
 }
 
-.meta-label {
-    opacity: 0.65;
-}
-
-.meta-value {
-    text-align: right;
-}
-
-.lightbox.show-meta .lightbox-meta {
+.grid a img {
+    width: 100%;
     display: block;
+    transition: opacity .15s;
 }
 
-/* Footer */
+.grid a:hover img {
+    opacity: .8;
+}
+
+.nav-links {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.nav-links a {
+    color: #f0b6e7;
+    text-decoration: none;
+    margin: 0 8px;
+    font-size: 14px;
+    opacity: .85;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
 footer {
-    padding: 24px;
+    padding: 20px;
     text-align: center;
     font-size: 13px;
-    font-weight: 300;
-    opacity: 0.7;
+    opacity: .7;
 }
 </style>
 </head>
 
 <body>
 
-<header>canoncanon.cc – home to the most amazingest photos on the interwebs</header>
+<header>canoncanon.cc</header>
 
-<div class="gallery-wrap">
-    <div class="gallery" id="gallery"></div>
-</div>
+<div class="grid-wrap">
+    <div class="grid">
+        <!-- Album covers – replace filenames with your real JPGs from /photos/thumbs2/ -->
+        <a href="/albums/tashkent.html">
+            <img src="/photos/thumbs2/tashkent.png" alt="tashkent">
+        </a>
 
-<div class="lightbox" id="lightbox">
-    <img id="lightboxImg" alt="">
-    <div class="counter" id="counter"></div>
-    <button class="info-btn" id="infoBtn">ⓘ INFO</button>
-    <div class="lightbox-meta" id="lightboxMeta"></div>
+        <!-- Add more albums later by duplicating the block above -->
+
+        <a href="/albums/tashkent.html">
+            <img src="/photos/thumbs2/tashkent.jpg" alt="tashkent">
+        </a>
+
+        <a href="/pages/project2.html">
+            <img src="/photos/thumbs/img2.webp" alt="Project 2">
+        </a>
+
+        <a href="/pages/project3.html">
+            <img src="/photos/thumbs/img3.webp" alt="Project 3">
+        </a>
+
+        <a href="/pages/project4.html">
+            <img src="/photos/thumbs/img4.webp" alt="Project 4">
+        </a>
+    </div>
+
+    <div class="nav-links">
+        <a href="/about.html">about</a> •
+        <a href="https://instagram.com/yourname">instagram</a>
+    </div>
 </div>
 
 <footer>
-website under construction<br>© 2025 — Photos licensed under CC BY-NC-SA 4.0
+site under construction (rev. feb01)</br>© 2025 — canoncanon.cc
 </footer>
 
-<script>
-let photos = [];
-let currentIndex = 0;
-let infoOpen = false;
-
-fetch("photos/photos.json")
-    .then(r => r.json())
-    .then(data => {
-        photos = data;
-        const gallery = document.getElementById("gallery");
-
-        data.forEach((entry, idx) => {
-            const img = document.createElement("img");
-            img.src = "photos/thumbs/" + entry.FileName.replace(/\.jpg$/i, ".webp");
-            img.loading = "lazy";
-
-            img.onerror = () => {
-                img.onerror = null;
-                img.src = "photos/thumbs/" + entry.FileName;
-            };
-
-            img.onclick = () => openLightbox(idx);
-            gallery.appendChild(img);
-        });
-    });
-
-function renderMeta(entry) {
-    document.getElementById("lightboxMeta").innerHTML = `
-        <div class="meta-grid">
-            <div class="meta-label">Camera</div><div class="meta-value">${entry.Model || ""}</div>
-            <div class="meta-label">Lens</div><div class="meta-value">${entry.LensModel || ""}</div>
-            <div class="meta-label">Focal</div><div class="meta-value">${entry.FocalLength || ""}</div>
-            <div class="meta-label">Aperture</div><div class="meta-value">${entry.Aperture ? "f/" + entry.Aperture : ""}</div>
-            <div class="meta-label">Shutter</div><div class="meta-value">${entry.ShutterSpeed || ""}</div>
-            <div class="meta-label">ISO</div><div class="meta-value">${entry.ISO ? "ISO " + entry.ISO : ""}</div>
-            <div class="meta-label">Date</div><div class="meta-value">${entry.DateTimeOriginal ? entry.DateTimeOriginal.split(" ")[0].replace(/:/g,"-") : ""}</div>
-            <div class="meta-label">Film</div><div class="meta-value">${entry.Film || ""}</div>
-        </div>
-    `;
-}
-
-function openLightbox(index) {
-    currentIndex = index;
-    const entry = photos[index];
-
-    document.getElementById("lightboxImg").src =
-        "photos/full/" + entry.FileName;
-
-    document.getElementById("counter").textContent =
-        `(${index + 1}/${photos.length})`;
-
-    renderMeta(entry);
-
-    const lb = document.getElementById("lightbox");
-    lb.style.display = "flex";
-    lb.classList.toggle("show-meta", infoOpen);
-}
-
-/* Close */
-document.getElementById("lightbox").addEventListener("click", e => {
-    if (e.target.id === "lightbox") {
-        e.currentTarget.style.display = "none";
-        infoOpen = false;
-    }
-});
-
-/* INFO toggle */
-document.getElementById("infoBtn").onclick = e => {
-    e.stopPropagation();
-    infoOpen = !infoOpen;
-    document.getElementById("lightbox").classList.toggle("show-meta", infoOpen);
-};
-
-/* Keyboard navigation */
-document.addEventListener("keydown", e => {
-    const lb = document.getElementById("lightbox");
-    if (lb.style.display !== "flex") return;
-
-    if (e.key === "ArrowRight" && currentIndex < photos.length - 1) {
-        openLightbox(currentIndex + 1);
-    }
-    if (e.key === "ArrowLeft" && currentIndex > 0) {
-        openLightbox(currentIndex - 1);
-    }
-    if (e.key === "Escape") {
-        lb.style.display = "none";
-        infoOpen = false;
-    }
-});
-</script>
 </body>
 </html>
