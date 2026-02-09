@@ -35,18 +35,19 @@ header {
     font-size: 28px;
 }
 
-/* separator lines */
+/* full-width separators */
 .divider {
-    width: 100%;
-    height: 1px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    height: 3px;              /* thicker as requested */
     background: #f0b6e7;
-    opacity: .6;
+    opacity: .7;
 }
 
 .grid-wrap {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px 24px;
+    padding: 20px 24px 24px;
 }
 
 /* fixed grid regardless of item count */
@@ -64,8 +65,15 @@ header {
     .grid { grid-template-columns: 1fr; }
 }
 
+/* make images ~75% smaller on long side */
+.grid a {
+    display: flex;
+    justify-content: center;
+}
+
 .grid a img {
-    width: 100%;
+    width: 25%;               /* 75% reduction */
+    max-width: 25%;
     display: block;
     transition: opacity .15s;
 }
@@ -107,18 +115,17 @@ footer {
 
 <div class="grid-wrap">
     <div class="grid">
-        <!-- Album covers – /photos/thumbs2/ -->
         <a href="/albums/tashkent">
             <img src="/photos/thumbs2/tashkent.png" alt="tashkent">
         </a>
     </div>
+</div>
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
-    <div class="nav-links">
-        <a href="/about.html">about</a> •
-        <a href="https://instagram.com/yourname">instagram</a>
-    </div>
+<div class="nav-links">
+    <a href="/about.html">about</a> •
+    <a href="https://instagram.com/yourname">instagram</a>
 </div>
 
 <footer>
